@@ -1,0 +1,24 @@
+<?php
+$yaml = "---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/vntauras/public_html
+    - /bin/mkdir -p \$DEPLOYPATH
+    - /bin/cp -R * \$DEPLOYPATH/
+    - /bin/cp -R .htaccess \$DEPLOYPATH/ 2>/dev/null || true
+    - find \$DEPLOYPATH -name \"*.php\" -exec chmod 644 {} \\;
+    - find \$DEPLOYPATH -type d -exec chmod 755 {} \\;
+    - chmod -R 755 \$DEPLOYPATH/storage/ 2>/dev/null || true
+    - chmod -R 755 \$DEPLOYPATH/uploads/ 2>/dev/null || true
+    - chmod 644 \$DEPLOYPATH/.htaccess 2>/dev/null || true
+    - rm -rf \$DEPLOYPATH/.git* 2>/dev/null || true
+    - rm -f \$DEPLOYPATH/*.bat 2>/dev/null || true
+    - rm -f \$DEPLOYPATH/.cpanel.yml 2>/dev/null || true
+";
+
+// Ensure Unix line endings
+$yaml = str_replace("\r\n", "\n", $yaml);
+
+file_put_contents('.cpanel.yml', $yaml);
+echo "Fixed .cpanel.yml line endings.\n";
+?>
