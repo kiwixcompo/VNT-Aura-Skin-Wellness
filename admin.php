@@ -21,8 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_text'])) {
 }
 
 // Handle Image Uploads
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image_upload'])) {
-    $target_dir = "uploads/";
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST) && empty($_FILES) && $_SERVER['CONTENT_LENGTH'] > 0) {
+    $message = "<div class='alert error'>The file you are trying to upload is too large (exceeds server post_max_size limits). Please compress it and try again.</div>";
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image_upload'])) {
+    if ($_FILES['image_upload']['error'] === UPLOAD_ERR_OK) {
+        $target_dir = "uploads/";
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
     $key_name = $_POST['image_key'];
     
     $file_ext = strtolower(pathinfo($_FILES["image_upload"]["name"], PATHINFO_EXTENSION));
@@ -43,6 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image_upload'])) {
     } else {
         $message = "<div class='alert error'>File is not an image.</div>";
     }
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image_upload']) && $_FILES['image_upload']['error'] !== UPLOAD_ERR_NO_FILE) {
+    $message = "<div class='alert error'>Upload failed. Error code: " . $_FILES['image_upload']['error'] . "</div>";
 }
 
 // Handle Status Updates

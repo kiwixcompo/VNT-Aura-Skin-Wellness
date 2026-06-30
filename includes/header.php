@@ -38,7 +38,7 @@
                 <a href="index.php">Home</a>
                 <a href="about.php">About</a>
                 <a href="treatments.php">Treatments</a>
-                <a href="journey.php">Journey</a>
+                <a href="client-login.php">Client Portal</a>
             </nav>
             <a href="booking.php" class="btn btn-outline">Book Consultation</a>
         </div>

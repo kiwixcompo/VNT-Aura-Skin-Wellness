@@ -25,6 +25,18 @@ try {
             value TEXT
         )");
 
+        // Create users table for OTP system
+        $db->exec("CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL UNIQUE,
+            password TEXT,
+            email_verified INTEGER DEFAULT 0,
+            verification_code TEXT,
+            verification_expires DATETIME,
+            account_status TEXT DEFAULT 'pending',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
+
         // Insert default image paths
         $stmt = $db->prepare("INSERT INTO settings (key_name, value) VALUES (?, ?)");
         $stmt->execute(['hero_image', 'assets/images/hero.png']);

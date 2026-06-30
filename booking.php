@@ -1,79 +1,77 @@
 <?php 
 require_once 'includes/header.php'; 
 
-$message = '';
+$services = [
+    'consultation' => ['name' => 'Signature Skin Consultation', 'price' => 50],
+    'bespoke' => ['name' => 'Aura Bespoke Facial™', 'price' => 120],
+    'renewal' => ['name' => 'Aura Skin Renewal™', 'price' => 150],
+    'refining' => ['name' => 'Aura Skin Refining™', 'price' => 95]
+];
+
+$selected_service = $_GET['service'] ?? '';
+$error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'] ?? '';
     $email = $_POST['email'] ?? '';
     $phone = $_POST['phone'] ?? '';
     $date = $_POST['date'] ?? '';
-    $concerns = $_POST['concerns'] ?? '';
+    $service_key = $_POST['service'] ?? '';
 
-    if (!empty($name) && !empty($email) && !empty($phone)) {
+    if (!empty($name) && !empty($email) && array_key_exists($service_key, $services)) {
         try {
-            $stmt = $db->prepare("INSERT INTO bookings (name, email, phone, preferred_date, concerns) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$name, $email, $phone, $date, $concerns]);
+            // Save as Pending
+            $stmt = $db->prepare("INSERT INTO bookings (name, email, phone, preferred_date, concerns, status) VALUES (?, ?, ?, ?, ?, 'Pending Payment')");
+            $stmt->execute([$name, $email, $phone, $date, $services[$service_key]['name']]);
+            $booking_id = $db->lastInsertId();
             
-            // Email notification logic
-            $to = "valeriescorner@gmail.com";
-            $subject = "New Consultation Booking: " . $name;
-            $body = "A new consultation has been booked.\n\nName: $name\nEmail: $email\nPhone: $phone\nPreferred Date: $date\nConcerns: $concerns";
-            $headers = "From: no-reply@vntaura.com\r\n";
-            
-            // Attempt to send email (may fail on local WAMP without SMTP config, but we save the booking regardless)
-            @mail($to, $subject, $body, $headers);
-            
-            $message = "<div class='alert success'>Thank you! Your consultation request has been received. We will contact you shortly.</div>";
+            // Redirect to mock checkout
+            header("Location: checkout.php?id=$booking_id&amount=" . $services[$service_key]['price']);
+            exit;
         } catch (Exception $e) {
-            $message = "<div class='alert error'>Error saving booking: " . $e->getMessage() . "</div>";
+            $error = "Database Error: " . $e->getMessage();
         }
     } else {
-        $message = "<div class='alert error'>Please fill in all required fields.</div>";
+        $error = "Please fill in all fields and select a valid service.";
     }
 }
 ?>
 
-<style>
-    .booking-page { padding: 4rem 0; background-color: var(--white); min-height: 70vh; }
-    .booking-form-container { max-width: 600px; margin: 0 auto; background: var(--bg-color); padding: 3rem; border-radius: 12px; }
-    .form-group { margin-bottom: 1.5rem; }
-    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark); }
-    .form-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-family: var(--font-body); }
-    textarea.form-control { resize: vertical; min-height: 100px; }
-    .btn-submit { width: 100%; text-align: center; margin-top: 1rem; }
-    .alert { padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; text-align: center; }
-    .alert.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .alert.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-</style>
-
-<section class="booking-page">
+<section style="padding: 4rem 0;">
     <div class="container">
-        <h2 class="text-center section-title">Book a Consultation</h2>
-        <div class="booking-form-container">
-            <?php echo $message; ?>
-            <form action="booking.php" method="POST">
+        <h2 class="section-title">Book Your Appointment</h2>
+        <div class="booking-form" style="background: var(--white); padding: 3rem; border: 1px solid var(--border);">
+            <?php if ($error): ?><div style="color: red; margin-bottom: 1rem;"><?php echo $error; ?></div><?php endif; ?>
+            
+            <form method="POST">
                 <div class="form-group">
-                    <label for="name">Full Name *</label>
-                    <input type="text" id="name" name="name" class="form-control" required>
+                    <label>Select Service</label>
+                    <select name="service" class="form-control" required>
+                        <option value="">-- Choose a Service --</option>
+                        <?php foreach($services as $key => $s): ?>
+                            <option value="<?php echo $key; ?>" <?php if($selected_service === $key) echo 'selected'; ?>>
+                                <?php echo $s['name']; ?> - £<?php echo number_format($s['price'], 2); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
+                    <label>Full Name</label>
+                    <input type="text" name="name" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="phone">Phone Number *</label>
-                    <input type="text" id="phone" name="phone" class="form-control" required>
+                    <label>Email Address</label>
+                    <input type="email" name="email" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="date">Preferred Date</label>
-                    <input type="date" id="date" name="date" class="form-control">
+                    <label>Phone Number</label>
+                    <input type="text" name="phone" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="concerns">Skin Concerns / Goals</label>
-                    <textarea id="concerns" name="concerns" class="form-control" placeholder="Tell us briefly about your skin..."></textarea>
+                    <label>Preferred Date</label>
+                    <input type="date" name="date" class="form-control" required>
                 </div>
-                <button type="submit" class="btn btn-primary btn-submit">Submit Request</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Continue to Payment</button>
             </form>
         </div>
     </div>
