@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="split-image">
-                    <img src="<?php echo htmlspecialchars(get_setting($db, 'about_image', 'assets/images/about.png')); ?>" alt="Treatment Room">
+                    <img src="<?php echo htmlspecialchars(get_setting($db, 'about_image', 'assets/images/about.png')); ?>" alt="Treatment Room" loading="lazy">
                 </div>
             </div>
         </div>

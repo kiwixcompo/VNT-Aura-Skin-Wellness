@@ -4,7 +4,7 @@
         <div class="container">
             <div class="split-layout">
                 <div class="split-image">
-                    <img src="<?php echo htmlspecialchars(get_setting($db, 'founder_image', 'assets/images/valerie_real.png')); ?>" alt="Valerie, Founder">
+                    <img src="<?php echo htmlspecialchars(get_setting($db, 'founder_image', 'assets/images/valerie_real.png')); ?>" alt="Valerie, Founder" loading="lazy">
                 </div>
                 <div class="split-content">
                     <h2>Meet Valerie</h2>
