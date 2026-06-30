@@ -2,7 +2,6 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/vntauras/public_html/
-    - /bin/cp -R * $DEPLOYPATH
-    - /bin/rm $DEPLOYPATH/deploy_server.php
-    - /bin/rm $DEPLOYPATH/sync_and_deploy.bat
-    - /bin/rm $DEPLOYPATH/sync.bat
+    - /bin/cp -a . $DEPLOYPATH
+    - /bin/rm -f $DEPLOYPATH/sync_and_deploy.bat
+    - /bin/rm -f $DEPLOYPATH/sync.bat

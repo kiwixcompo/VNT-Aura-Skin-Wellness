@@ -10,8 +10,8 @@ if (!isset($_GET['token']) || $_GET['token'] !== $secret_token) {
 }
 
 // Ensure this script is running from the cPanel repository directory
-// Note: This script assumes you have a Git repository setup on cPanel at /home/vntauras/repositories/vnt-aura
-$repo_dir = '/home/vntauras/repositories/vnt-aura';
+// Note: This script assumes you have a Git repository setup on cPanel at /home/vntauras/repositories/VNT-Aura-Skin-Wellness
+$repo_dir = '/home/vntauras/repositories/VNT-Aura-Skin-Wellness';
 
 // Execute Git Pull to fetch latest changes from GitHub
 // Because we have .cpanel.yml in the repo, cPanel's Version Control will automatically execute the deployment tasks after pulling!
