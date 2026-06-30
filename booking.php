@@ -80,3 +80,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <?php require_once 'includes/footer.php'; ?>
+ 

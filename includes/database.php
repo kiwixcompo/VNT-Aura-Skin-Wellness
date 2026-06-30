@@ -46,3 +46,4 @@ function get_setting($db, $key, $default = '') {
     return $result ? $result['value'] : $default;
 }
 ?>
+ 

@@ -19,3 +19,4 @@ A premium, dynamic web application built for the VNT Aura Skin & Wellness clinic
 2. Ensure PHP is running.
 3. Access `index.php` through your localhost URL (e.g., `http://localhost/VNTAuraSkin/index.php`).
 4. Access the admin dashboard at `login.php` (Default username: `vnt_admin`, Password: `password123`).
+ 
