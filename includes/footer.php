@@ -3,7 +3,7 @@
         <div class="container footer-content">
             <div class="footer-brand">
                 <div class="logo">
-                    <img src="assets/images/logo.png" alt="VNT Aura Skin & Wellness" style="filter: brightness(0) invert(1);" loading="lazy">
+                    <img src="assets/images/logo.png" alt="VNT Aura Skin & Wellness" style="filter: brightness(0) invert(1);">
                 </div>
                 <p>Healthy Skin. Calm Confidence.</p>
             </div>

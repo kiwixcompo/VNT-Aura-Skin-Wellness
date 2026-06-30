@@ -1,27 +1,23 @@
-// Smooth scrolling for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
+document.addEventListener('DOMContentLoaded', () => {
+    // Mobile Menu Toggle
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navLinks = document.getElementById('nav-links');
 
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// FAQ Accordion - Close others when one is opened
-const detailsElements = document.querySelectorAll('details.faq-item');
-
-detailsElements.forEach(targetDetail => {
-  targetDetail.addEventListener('click', () => {
-    // Close all other details that are not the targetDetail
-    detailsElements.forEach(detail => {
-      if (detail !== targetDetail) {
-        detail.removeAttribute('open');
-      }
-    });
-  });
+    if (mobileMenu && navLinks) {
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            
+            // Toggle hamburger animation (optional, can add classes to bars)
+            const bars = mobileMenu.querySelectorAll('.bar');
+            if (navLinks.classList.contains('active')) {
+                bars[0].style.transform = 'translateY(7px) rotate(45deg)';
+                bars[1].style.opacity = '0';
+                bars[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+            } else {
+                bars[0].style.transform = 'none';
+                bars[1].style.opacity = '1';
+                bars[2].style.transform = 'none';
+            }
+        });
+    }
 });

@@ -12,10 +12,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
-    <!-- FontAwesome -->
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -24,12 +20,6 @@
     
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
-    <style>
-        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
-        .nav-links a { font-weight: 500; transition: color 0.3s ease; }
-        .nav-links a:hover { color: var(--accent-color); }
-        @media (max-width: 768px) { .nav-links { display: none; } }
-    </style>
 </head>
 <body>
     <!-- Header / Navigation -->
@@ -38,11 +28,18 @@
             <a href="index.php" class="logo">
                 <img src="assets/images/logo.png" alt="VNT Aura Skin & Wellness">
             </a>
-            <nav class="nav-links">
+            
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+
+            <nav class="nav-links" id="nav-links">
                 <a href="index.php">Home</a>
                 <a href="about.php">About</a>
                 <a href="treatments.php">Treatments</a>
-                <a href="client-login.php">Client Portal</a>
+                <a href="journey.php">Journey</a>
             </nav>
             <a href="booking.php" class="btn btn-outline">Book Consultation</a>
         </div>
