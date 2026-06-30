@@ -1,47 +1,66 @@
 @echo off
-setlocal
-
-echo ===================================================
-echo VNT Aura Skin - Local to Live Deployment Sync
-echo ===================================================
+:: VNT Aura Skin - Git Sync Tool
+echo ==============================================
+echo   VNT Aura Skin ^& Wellness - Git Backup ^& Sync Tool
+echo ==============================================
 echo.
 
-:: 1. Prompt for an active change statement
-set /p COMMIT_MSG="Enter commit message (e.g., 'Updated homepage layout'): "
-if "%COMMIT_MSG%"=="" set COMMIT_MSG="Auto-sync changes from local development"
-
-echo.
-echo [1/3] Staging changes locally...
-git add .
-
-echo.
-echo [2/3] Committing updates...
-git commit -m "%COMMIT_MSG%"
-
-echo.
-echo [3/3] Pushing to GitHub (origin/main)...
-git push origin main
-
-if %ERRORLEVEL% neq 0 (
-    echo.
-    echo ERROR: Failed to push to GitHub. Aborting live deployment trigger.
+:: Check if git is installed
+where git >nul 2>nul
+if %errorlevel% neq 0 (
+    echo [ERROR] Git is not installed or not in PATH. Please install Git first.
     pause
-    exit /b %ERRORLEVEL%
+    exit /b
 )
 
+:: Check if WAMP repository directory is initialized
+if not exist ".git" (
+    echo [INFO] Git repository not initialized. Initializing now...
+    git init
+    git branch -M main
+    echo.
+)
+
+:: Check remote origin configuration
+git remote get-url origin >nul 2>nul
+if %errorlevel% neq 0 (
+    echo [INFO] GitHub Remote URL is not configured.
+    echo Please create an empty repository named 'VNT-Aura-Skin-Wellness' on your GitHub profile first.
+    echo.
+    set /p username="Enter your GitHub username: "
+    
+    :: Clean whitespaces if any
+    setlocal enabledelayedexpansion
+    set "username=!username: =!"
+    
+    echo [INFO] Configuring remote origin to: https://github.com/!username!/VNT-Aura-Skin-Wellness.git
+    git remote add origin https://github.com/!username!/VNT-Aura-Skin-Wellness.git
+    endlocal
+    echo.
+)
+
+:: Backup and push changes
+echo [INFO] Adding all changes to commit stage...
+git add .
+
+echo [INFO] Creating backup commit...
+git commit -m "Auto backup: %date% %time%"
+
+echo [INFO] Pushing changes to main branch...
+git push -u origin main
+
+if %errorlevel% equ 0 (
+    echo.
+    echo ==============================================
+    echo [SUCCESS] Your work has been pushed and backed up!
+    echo ==============================================
+    echo.
+    echo [INFO] Triggering cPanel Auto-Deployment...
+    curl -s "https://vntauraskinandwellness.com/deploy_server.php?token=vnt_deploy_token_2026"
+    echo.
+) else (
+    echo.
+    echo [WARNING] Push failed. Make sure you created the repo on GitHub and have authorization.
+)
 echo.
-echo ===================================================
-echo GitHub Sync Complete! Triggering Live Server Deployment...
-echo ===================================================
-
-:: Setup Webhook URL
-:: Remember to upload deploy_server.php to your live /home/vntauras/public_html folder first!
-set WEBHOOK_URL="https://vntauraskinandwellness.com/deploy_server.php?token=vnt_deploy_token_2026"
-
-:: Trigger Webhook silently using curl
-curl -sS %WEBHOOK_URL% > deploy_log.txt
-
-echo.
-echo Deployment triggered! Server response logged in deploy_log.txt.
-echo ===================================================
 pause
