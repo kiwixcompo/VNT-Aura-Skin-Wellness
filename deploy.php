@@ -14,7 +14,8 @@ ini_set('display_errors', 1);
 $config = [
     'repo_url' => 'https://github.com/kiwixcompo/VNT-Aura-Skin-Wellness.git',
     'branch' => 'main',
-    'deploy_path' => __DIR__, // Current directory where this script is located
+    'cpanel_repo_path' => '/home/vntauras/repositories/VNT-Aura-Skin-Wellness', // The cPanel repository location
+    'deploy_path' => __DIR__, // Current directory where this script is located (public_html)
     'secret_key' => 'VNTAura2026SecureKey!@#$%', // Secure webhook secret
     'log_file' => __DIR__ . '/deploy.log',
     'backup_dir' => __DIR__ . '/backups',
@@ -94,89 +95,25 @@ function createBackup($config) {
     }
 }
 
-// Deployment using GitHub API (for shared hosting without Git)
-function deployWithoutGit($config) {
-    logMessage("=== DEPLOYMENT STARTED (GitHub API Method) ===", $config);
+// Deployment using cPanel Repository sync
+function deployFromCpanelRepo($config) {
+    logMessage("=== DEPLOYMENT STARTED (cPanel Sync Method) ===", $config);
     
     createBackup($config);
     
-    // GitHub API URL to get repository contents
-    $api_url = "https://api.github.com/repos/kiwixcompo/VNT-Aura-Skin-Wellness/zipball/{$config['branch']}";
-    
-    logMessage("Downloading repository from GitHub API: {$api_url}", $config);
-    
-    // Download the repository as a ZIP file
-    $context = stream_context_create([
-        'http' => [
-            'method' => 'GET',
-            'header' => [
-                'User-Agent: VNTAura-Deploy/1.0'
-            ],
-            'timeout' => 60
-        ]
-    ]);
-    
-    $zip_content = @file_get_contents($api_url, false, $context);
-    
-    if ($zip_content === false) {
-        logMessage("ERROR: Failed to download repository from GitHub API", $config);
+    if (!is_dir($config['cpanel_repo_path'])) {
+        logMessage("ERROR: cPanel repository folder not found at: " . $config['cpanel_repo_path'], $config);
         return false;
     }
     
-    // Save ZIP file temporarily
-    $temp_zip = $config['deploy_path'] . '/temp_deploy.zip';
-    if (file_put_contents($temp_zip, $zip_content) === false) {
-        logMessage("ERROR: Failed to save temporary ZIP file", $config);
-        return false;
-    }
+    logMessage("Syncing files from {$config['cpanel_repo_path']} to {$config['deploy_path']}", $config);
     
-    logMessage("Repository downloaded successfully, extracting files", $config);
-    
-    // Extract ZIP file
-    if (class_exists('ZipArchive')) {
-        $zip = new ZipArchive;
-        if ($zip->open($temp_zip) === TRUE) {
-            $temp_dir = $config['deploy_path'] . '/temp_extract';
-            if (!is_dir($temp_dir)) {
-                mkdir($temp_dir, 0755, true);
-            }
-            
-            $zip->extractTo($temp_dir);
-            $zip->close();
-            
-            $extracted_folders = glob($temp_dir . '/*', GLOB_ONLYDIR);
-            if (empty($extracted_folders)) {
-                logMessage("ERROR: No extracted folder found", $config);
-                @unlink($temp_zip);
-                return false;
-            }
-            
-            $source_dir = $extracted_folders[0];
-            
-            // Copy files from extracted folder to deployment directory
-            if (copyDirectory($source_dir, $config['deploy_path'])) {
-                logMessage("Files copied successfully", $config);
-                
-                // Clean up temporary files
-                @unlink($temp_zip);
-                removeDirectory($temp_dir);
-                
-                logMessage("=== DEPLOYMENT COMPLETED SUCCESSFULLY ===", $config);
-                return true;
-            } else {
-                logMessage("ERROR: Failed to copy files", $config);
-                @unlink($temp_zip);
-                removeDirectory($temp_dir);
-                return false;
-            }
-        } else {
-            logMessage("ERROR: Failed to open ZIP file", $config);
-            @unlink($temp_zip);
-            return false;
-        }
+    if (copyDirectory($config['cpanel_repo_path'], $config['deploy_path'])) {
+        logMessage("Files successfully synced from cPanel repository", $config);
+        logMessage("=== DEPLOYMENT COMPLETED SUCCESSFULLY ===", $config);
+        return true;
     } else {
-        logMessage("ERROR: ZipArchive class not available", $config);
-        @unlink($temp_zip);
+        logMessage("ERROR: Failed to copy files from cPanel repository", $config);
         return false;
     }
 }
@@ -291,9 +228,9 @@ try {
         <?php
         flush();
         
-        echo '<div class="status info">📦 Using GitHub API deployment method...</div>';
+        echo '<div class="status info">📦 Syncing from cPanel Repository...</div>';
         flush();
-        $success = deployWithoutGit($config);
+        $success = deployFromCpanelRepo($config);
         
         if ($success) {
             echo '<div class="status success"><strong>✅ Success!</strong> Deployment completed successfully!</div>';
@@ -332,7 +269,7 @@ try {
             exit;
         }
         
-        $success = deployWithoutGit($config);
+        $success = deployFromCpanelRepo($config);
         
         if ($success) {
             echo "OK - Deployment successful";
