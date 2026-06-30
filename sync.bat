@@ -1,16 +1,16 @@
 @echo off
-title VNT Aura Skin & Wellness - Auto-Deploy Sync
+title VNT Aura Skin ^& Wellness - Auto-Deploy Sync
 color 0A
 
 echo.
-echo  ╔══════════════════════════════════════════════════════════════╗
-echo  ║                VNT AURA SKIN ^& WELLNESS                      ║
-echo  ║                   AUTO-DEPLOY SYNC TOOL                      ║
-echo  ╚══════════════════════════════════════════════════════════════╝
+echo  ==============================================================
+echo                    VNT AURA SKIN ^& WELLNESS                      
+echo                       AUTO-DEPLOY SYNC TOOL                      
+echo  ==============================================================
 echo.
 echo  Repository: https://github.com/kiwixcompo/VNT-Aura-Skin-Wellness
 echo  Live Site:  https://vntauraskinandwellness.com
-echo  ══════════════════════════════════════════════════════════════
+echo  ==============================================================
 echo.
 
 cd /d "%~dp0"
@@ -43,35 +43,36 @@ if errorlevel 1 (
     
     if errorlevel 1 (
         echo.
-        echo  ❌ SYNC FAILED - Check your internet connection or GitHub access
+        echo  [ERROR] SYNC FAILED - Check your internet connection or GitHub access
         echo.
         timeout /t 5 >nul
         exit /b 1
     )
     
     echo.
-    echo  ✅ SUCCESS! Changes uploaded to GitHub
-    echo.
-    echo  [DEPLOY] Triggering auto-deployment to live site...
-    
-    REM Trigger manual deployment (fallback if webhook fails)
-    curl -s "https://vntauraskinandwellness.com/deploy.php?manual=true" >nul 2>&1
-    
-    if errorlevel 1 (
-        echo  ⚠️  Manual deployment trigger failed - webhook should handle it
-    ) else (
-        echo  ✅ Live site deployment triggered successfully!
-    )
-    
-    echo.
-    echo  🌐 Your changes will be live at: https://vntauraskinandwellness.com
-    echo  📊 View repository: https://github.com/kiwixcompo/VNT-Aura-Skin-Wellness
+    echo  [SUCCESS] Changes uploaded to GitHub!
     echo.
 ) else (
     echo.
-    echo  ℹ️  No changes detected - Repository is up to date!
+    echo  [INFO] No local changes detected. Proceeding to sync live site...
     echo.
 )
+
+echo  [DEPLOY] Triggering auto-deployment to live site...
+
+REM Trigger manual deployment (Always runs to ensure public_html is synced)
+curl -s "https://vntauraskinandwellness.com/deploy.php?manual=true" >nul 2>&1
+
+if errorlevel 1 (
+    echo  [WARNING] Manual deployment trigger failed - Check your server
+) else (
+    echo  [SUCCESS] Live site deployment triggered successfully!
+)
+
+echo.
+echo  Your changes will be live at: https://vntauraskinandwellness.com
+echo  View repository: https://github.com/kiwixcompo/VNT-Aura-Skin-Wellness
+echo.
 
 echo  Press any key to close...
 pause >nul
