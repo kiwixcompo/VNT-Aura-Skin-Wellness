@@ -54,7 +54,7 @@ $programmes = $stmt->fetchAll();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Programmes - VNT Aura</title>
+    <title>Manage Skin Journeys - VNT Aura</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -69,7 +69,7 @@ $programmes = $stmt->fetchAll();
             <a href="index.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-cog w-6"></i> Settings</a>
             <a href="bookings.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-calendar-alt w-6"></i> Bookings</a>
             <a href="treatments.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-spa w-6"></i> Treatments</a>
-            <a href="programmes.php" class="block py-2 px-4 bg-gray-100 rounded text-gray-900 font-medium"><i class="fas fa-layer-group w-6"></i> Programmes</a>
+            <a href="programmes.php" class="block py-2 px-4 bg-gray-100 rounded text-gray-900 font-medium"><i class="fas fa-layer-group w-6"></i> Skin Journeys</a>
             <a href="logout.php" class="block py-2 px-4 text-red-600 hover:bg-red-50 rounded transition-colors mt-8"><i class="fas fa-sign-out-alt w-6"></i> Logout</a>
         </nav>
     </div>
@@ -77,14 +77,14 @@ $programmes = $stmt->fetchAll();
     <!-- Main Content -->
     <div class="ml-64 p-8">
         <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-semibold">Skin Programmes</h2>
-            <button onclick="openModal()" class="bg-blue-900 text-white px-4 py-2 rounded shadow hover:bg-blue-800"><i class="fas fa-plus mr-2"></i> Add Programme</button>
+            <h2 class="text-3xl font-semibold">Skin Skin Journeys</h2>
+            <button onclick="openModal()" class="bg-blue-900 text-white px-4 py-2 rounded shadow hover:bg-blue-800"><i class="fas fa-plus mr-2"></i> Add Skin Journey</button>
         </div>
         
         <?php if (isset($_GET['msg']) && $_GET['msg'] === 'saved'): ?>
             <div class="bg-green-100 text-green-800 p-4 rounded mb-6 font-medium">Changes saved successfully.</div>
         <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'deleted'): ?>
-            <div class="bg-yellow-100 text-yellow-800 p-4 rounded mb-6 font-medium">Programme deleted.</div>
+            <div class="bg-yellow-100 text-yellow-800 p-4 rounded mb-6 font-medium">Skin Journey deleted.</div>
         <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'size_error'): ?>
             <div class="bg-red-100 text-red-800 p-4 rounded mb-6 font-medium">Error: Image file size must be less than 2MB.</div>
         <?php endif; ?>
@@ -93,7 +93,7 @@ $programmes = $stmt->fetchAll();
             <?php foreach ($programmes as $p): ?>
                 <div class="bg-white rounded-xl shadow-sm border overflow-hidden flex flex-col">
                     <?php $imgSrc = (strpos($p['image_url'], 'http') === 0 || strpos($p['image_url'], '/') === 0) ? $p['image_url'] : '../' . $p['image_url']; ?>
-                    <img src="<?= htmlspecialchars($imgSrc) ?>" alt="Programme" class="h-48 w-full object-cover">
+                    <img src="<?= htmlspecialchars($imgSrc) ?>" alt="Skin Journey" class="h-48 w-full object-cover">
                     <div class="p-6 flex-grow">
                         <h3 class="text-xl font-bold mb-2"><?= htmlspecialchars($p['title']) ?></h3>
                         <p class="text-sm text-gray-600 line-clamp-3 mb-4"><?= htmlspecialchars($p['description']) ?></p>
@@ -117,7 +117,7 @@ $programmes = $stmt->fetchAll();
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto relative">
             <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800"><i class="fas fa-times text-xl"></i></button>
             <div class="p-8 pb-4 border-b">
-                <h3 class="text-2xl font-semibold" id="modalTitle">Add Programme</h3>
+                <h3 class="text-2xl font-semibold" id="modalTitle">Add Skin Journey</h3>
             </div>
             
             <div class="p-8">
@@ -160,7 +160,7 @@ $programmes = $stmt->fetchAll();
                     
                     <div class="pt-4 flex justify-end gap-3">
                         <button type="button" onclick="closeModal()" class="px-6 py-2 border rounded-lg hover:bg-gray-50">Cancel</button>
-                        <button type="submit" class="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800">Save Programme</button>
+                        <button type="submit" class="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800">Save Skin Journey</button>
                     </div>
                 </form>
             </div>
@@ -177,7 +177,7 @@ $programmes = $stmt->fetchAll();
         const formOrder = document.getElementById('form_display_order');
 
         function openModal() {
-            mTitle.textContent = 'Add Programme';
+            mTitle.textContent = 'Add Skin Journey';
             formId.value = '';
             formTitle.value = '';
             formDesc.value = '';
@@ -187,7 +187,7 @@ $programmes = $stmt->fetchAll();
         }
 
         function editModal(data) {
-            mTitle.textContent = 'Edit Programme';
+            mTitle.textContent = 'Edit Skin Journey';
             formId.value = data.id;
             formTitle.value = data.title;
             formDesc.value = data.description;

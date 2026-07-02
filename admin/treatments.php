@@ -59,7 +59,7 @@ $treatments = $stmt->fetchAll();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Treatments - VNT Aura</title>
+    <title>Manage Advanced Skin Therapies - VNT Aura</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -73,7 +73,7 @@ $treatments = $stmt->fetchAll();
         <nav class="p-4 space-y-2">
             <a href="index.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-cog w-6"></i> Settings</a>
             <a href="bookings.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-calendar-alt w-6"></i> Bookings</a>
-            <a href="treatments.php" class="block py-2 px-4 bg-gray-100 rounded text-gray-900 font-medium"><i class="fas fa-spa w-6"></i> Treatments</a>
+            <a href="treatments.php" class="block py-2 px-4 bg-gray-100 rounded text-gray-900 font-medium"><i class="fas fa-spa w-6"></i> Advanced Skin Therapies</a>
             <a href="programmes.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-layer-group w-6"></i> Programmes</a>
             <a href="logout.php" class="block py-2 px-4 text-red-600 hover:bg-red-50 rounded transition-colors mt-8"><i class="fas fa-sign-out-alt w-6"></i> Logout</a>
         </nav>
@@ -82,14 +82,14 @@ $treatments = $stmt->fetchAll();
     <!-- Main Content -->
     <div class="ml-64 p-8">
         <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-semibold">Treatment Protocols</h2>
-            <button onclick="openModal()" class="bg-blue-900 text-white px-4 py-2 rounded shadow hover:bg-blue-800"><i class="fas fa-plus mr-2"></i> Add Treatment</button>
+            <h2 class="text-3xl font-semibold">Therapy Protocols</h2>
+            <button onclick="openModal()" class="bg-blue-900 text-white px-4 py-2 rounded shadow hover:bg-blue-800"><i class="fas fa-plus mr-2"></i> Add Therapy</button>
         </div>
         
         <?php if (isset($_GET['msg']) && $_GET['msg'] === 'saved'): ?>
             <div class="bg-green-100 text-green-800 p-4 rounded mb-6 font-medium">Changes saved successfully.</div>
         <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'deleted'): ?>
-            <div class="bg-yellow-100 text-yellow-800 p-4 rounded mb-6 font-medium">Treatment deleted.</div>
+            <div class="bg-yellow-100 text-yellow-800 p-4 rounded mb-6 font-medium">Therapy deleted.</div>
         <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'size_error'): ?>
             <div class="bg-red-100 text-red-800 p-4 rounded mb-6 font-medium">Error: Image file size must be less than 2MB.</div>
         <?php endif; ?>
@@ -98,7 +98,7 @@ $treatments = $stmt->fetchAll();
             <?php foreach ($treatments as $t): ?>
                 <div class="bg-white rounded-xl shadow-sm border overflow-hidden flex flex-col">
                     <?php $imgSrc = (strpos($t['image_url'], 'http') === 0 || strpos($t['image_url'], '/') === 0) ? $t['image_url'] : '../' . $t['image_url']; ?>
-                    <img src="<?= htmlspecialchars($imgSrc) ?>" alt="Treatment" class="h-48 w-full object-cover">
+                    <img src="<?= htmlspecialchars($imgSrc) ?>" alt="Therapy" class="h-48 w-full object-cover">
                     <div class="p-6 flex-grow">
                         <h3 class="text-xl font-bold mb-2"><?= htmlspecialchars($t['title']) ?></h3>
                         <p class="text-sm text-gray-600 line-clamp-2 mb-4"><?= htmlspecialchars($t['short_desc']) ?></p>
@@ -120,7 +120,7 @@ $treatments = $stmt->fetchAll();
     <div id="treatmentModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 relative">
             <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800"><i class="fas fa-times text-xl"></i></button>
-            <h3 class="text-2xl font-semibold mb-6" id="modalTitle">Add Treatment</h3>
+            <h3 class="text-2xl font-semibold mb-6" id="modalTitle">Add Therapy</h3>
             
             <form method="POST" action="treatments.php" class="space-y-4" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="save">
@@ -178,7 +178,7 @@ $treatments = $stmt->fetchAll();
                 
                 <div class="pt-4 flex justify-end gap-3">
                     <button type="button" onclick="closeModal()" class="px-6 py-2 border rounded-lg hover:bg-gray-50">Cancel</button>
-                    <button type="submit" class="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800">Save Treatment</button>
+                    <button type="submit" class="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800">Save Therapy</button>
                 </div>
             </form>
         </div>
@@ -199,7 +199,7 @@ $treatments = $stmt->fetchAll();
         const formOrder = document.getElementById('form_display_order');
 
         function openModal() {
-            mTitle.textContent = 'Add Treatment';
+            mTitle.textContent = 'Add Therapy';
             formId.value = '';
             formTitle.value = '';
             formShort.value = '';
@@ -214,7 +214,7 @@ $treatments = $stmt->fetchAll();
         }
 
         function editModal(data) {
-            mTitle.textContent = 'Edit Treatment';
+            mTitle.textContent = 'Edit Therapy';
             formId.value = data.id;
             formTitle.value = data.title;
             formShort.value = data.short_desc;
