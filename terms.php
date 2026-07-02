@@ -43,7 +43,7 @@ require_once __DIR__ . '/includes/header.php';
                 <p>In order to resolve a complaint regarding the Site or to receive further information regarding use of the Site, please contact us at:</p>
                 <p class="mt-2 font-medium">VNT Aura Skin & Wellness</p>
                 <p>Leeds, United Kingdom</p>
-                <p>valeriescorner@gmail.com</p>
+                <p>vntauraskinandwellness@gmail.com</p>
             </section>
         </div>
     </div>

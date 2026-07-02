@@ -10,7 +10,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="space-y-8 font-light leading-relaxed text-gray-700">
             <section>
                 <h2 class="text-2xl font-heading text-secondary mb-4">1. Introduction</h2>
-                <p>Welcome to VNT Aura Skin & Wellness. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us at valeriescorner@gmail.com.</p>
+                <p>Welcome to VNT Aura Skin & Wellness. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us at vntauraskinandwellness@gmail.com.</p>
             </section>
             
             <section>
@@ -45,7 +45,7 @@ require_once __DIR__ . '/includes/header.php';
 
             <section>
                 <h2 class="text-2xl font-heading text-secondary mb-4">6. Contact Us</h2>
-                <p>If you have questions or comments about this notice, you may email us at valeriescorner@gmail.com.</p>
+                <p>If you have questions or comments about this notice, you may email us at vntauraskinandwellness@gmail.com.</p>
             </section>
         </div>
     </div>

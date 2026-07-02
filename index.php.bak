@@ -95,28 +95,46 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
         </div>
     </section>
 
-    
-    <!-- START HERE: SKIN CONSULTATION -->
-    <section id="start-here" class="py-32 px-6 bg-[#f4f2ee]">
+    <!-- OUR APPROACH -->
+    <section class="py-24 px-6 bg-[#f4f2ee]">
         <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="order-2 lg:order-1 space-y-6 reveal-up">
-                    <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Start Here</span>
-                    <h2 class="text-4xl md:text-5xl font-heading text-secondary">Skin Consultation</h2>
-                    <p class="text-gray-700 font-light leading-relaxed text-lg">
-                        Your journey to healthy, glowing skin starts with a thorough understanding of your unique skin concerns. Our comprehensive Skin Consultation is the essential first step for all new clients.
-                    </p>
-                    <p class="text-gray-700 font-light leading-relaxed text-lg">
-                        During this session, we deeply analyze your skin, discuss your lifestyle, and create a bespoke treatment plan tailored exactly to what your skin needs to thrive.
-                    </p>
-                    <div class="pt-6">
-                        <a href="#" onclick="openBookingModal('Skin Consultation'); return false;" class="btn-luxury inline-block px-10 py-4 bg-secondary text-white uppercase tracking-widest text-sm hover:bg-opacity-90 transition-all duration-300 shadow-lg">Book Now</a>
+            <div class="text-center mb-16 reveal-up">
+                <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Our Methodology</span>
+                <h2 class="text-4xl md:text-5xl font-heading text-secondary">Our Approach</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Card 1 -->
+                <div class="bg-bg p-12 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.03)] hover:-translate-y-2 transition-transform duration-500 reveal-up text-center border border-gray-100">
+                    <div class="w-16 h-16 rounded-full bg-[#f4f2ee] flex items-center justify-center text-accent text-2xl mx-auto mb-6">
+                        <i class="fas fa-clipboard-list"></i>
                     </div>
+                    <h3 class="text-2xl font-heading text-secondary mb-4">Consult</h3>
+                    <p class="text-gray-600 font-light leading-relaxed">
+                        We assess your skin concerns, medical history, lifestyle, skincare routine and goals.
+                    </p>
                 </div>
-                <div class="order-1 lg:order-2 reveal-up">
-                    <div class="relative w-full aspect-square rounded-2xl overflow-hidden shadow-2xl">
-                        <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71c9?auto=format&fit=crop&q=80&w=1000" alt="Skin Consultation" class="w-full h-full object-cover">
+                
+                <!-- Card 2 -->
+                <div class="bg-bg p-12 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.03)] hover:-translate-y-2 transition-transform duration-500 reveal-up text-center border border-gray-100 delay-100">
+                    <div class="w-16 h-16 rounded-full bg-[#f4f2ee] flex items-center justify-center text-accent text-2xl mx-auto mb-6">
+                        <i class="fas fa-vial"></i>
                     </div>
+                    <h3 class="text-2xl font-heading text-secondary mb-4">Personalise</h3>
+                    <p class="text-gray-600 font-light leading-relaxed">
+                        We create a treatment plan tailored specifically to your skin using professional treatments and personalised homecare recommendations.
+                    </p>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="bg-bg p-12 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.03)] hover:-translate-y-2 transition-transform duration-500 reveal-up text-center border border-gray-100 delay-200">
+                    <div class="w-16 h-16 rounded-full bg-[#f4f2ee] flex items-center justify-center text-accent text-2xl mx-auto mb-6">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="text-2xl font-heading text-secondary mb-4">Support</h3>
+                    <p class="text-gray-600 font-light leading-relaxed">
+                        Healthy skin is a journey. We monitor your progress, adjust your treatment plan where needed and support you every step of the way.
+                    </p>
                 </div>
             </div>
         </div>
@@ -208,37 +226,6 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
         </div>
     </section>
 
-    <!-- PROGRAMMES -->
-    <section id="programmes" class="py-32 px-6 bg-secondary text-bg">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
-                <div class="max-w-2xl">
-                    <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Curated Journeys</span>
-                    <h2 class="text-4xl md:text-5xl font-heading mb-6">Skin Programmes</h2>
-                    <p class="text-gray-400 font-light text-lg">We don't just perform treatments; we deliver results. Our clinical programmes combine multiple modalities over a set period to fundamentally transform your skin.</p>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
-                <?php foreach ($programmes as $p): ?>
-                <div class="group reveal-up">
-                    <div class="overflow-hidden mb-6">
-                        <img src="<?= htmlspecialchars($p['image_url']) ?>" alt="<?= htmlspecialchars($p['title']) ?>" class="w-full h-80 object-cover grayscale opacity-80 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105">
-                    </div>
-                    <div class="border-t border-gray-700 pt-6">
-                        <h3 class="text-2xl font-heading mb-3 text-white"><?= htmlspecialchars($p['title']) ?></h3>
-                        <p class="text-gray-400 font-light leading-relaxed mb-6"><?= htmlspecialchars($p['description']) ?></p>
-                        <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($p['title'])) ?>'); return false;" class="inline-flex items-center text-sm uppercase tracking-widest text-accent hover:text-white transition-colors group/link">
-                            Book Now 
-                            <i class="fas fa-arrow-right ml-2 transform group-hover/link:translate-x-2 transition-transform"></i>
-                        </a>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-
     <!-- TRANSFORMATIONAL TREATMENTS -->
     <section id="treatments" class="py-32 px-6 bg-bg">
         <div class="max-w-7xl mx-auto">
@@ -299,6 +286,37 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
         }
     </script>
 
+    <!-- PROGRAMMES -->
+    <section id="programmes" class="py-32 px-6 bg-secondary text-bg">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
+                <div class="max-w-2xl">
+                    <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Curated Journeys</span>
+                    <h2 class="text-4xl md:text-5xl font-heading mb-6">Skin Programmes</h2>
+                    <p class="text-gray-400 font-light text-lg">We don't just perform treatments; we deliver results. Our clinical programmes combine multiple modalities over a set period to fundamentally transform your skin.</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
+                <?php foreach ($programmes as $p): ?>
+                <div class="group reveal-up">
+                    <div class="overflow-hidden mb-6">
+                        <img src="<?= htmlspecialchars($p['image_url']) ?>" alt="<?= htmlspecialchars($p['title']) ?>" class="w-full h-80 object-cover grayscale opacity-80 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105">
+                    </div>
+                    <div class="border-t border-gray-700 pt-6">
+                        <h3 class="text-2xl font-heading mb-3 text-white"><?= htmlspecialchars($p['title']) ?></h3>
+                        <p class="text-gray-400 font-light leading-relaxed mb-6"><?= htmlspecialchars($p['description']) ?></p>
+                        <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($p['title'])) ?>'); return false;" class="inline-flex items-center text-sm uppercase tracking-widest text-accent hover:text-white transition-colors group/link">
+                            Enquire Now 
+                            <i class="fas fa-arrow-right ml-2 transform group-hover/link:translate-x-2 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
     <!-- ABOUT THE FOUNDER -->
     <section id="founder" class="py-32 px-6 bg-bg">
         <div class="max-w-7xl mx-auto">
@@ -327,140 +345,40 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
         </div>
     </section>
 
-    
     <!-- WHY CHOOSE US -->
     <section class="py-24 px-6 bg-[#f4f2ee]">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16 reveal-up">
-                <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Our Promise</span>
-                <h2 class="text-4xl md:text-5xl font-heading text-secondary">Why Choose VNT Aura</h2>
+                <h2 class="text-4xl md:text-5xl font-heading text-secondary">Why Choose Us</h2>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Feature 1 -->
                 <div class="text-center reveal-up p-8 border border-gray-200 rounded-xl bg-bg hover:shadow-xl transition-shadow duration-300">
-                    <i class="fas fa-clipboard-check text-3xl text-accent mb-4"></i>
-                    <h4 class="text-xl font-heading text-secondary mb-2">Personalised treatment plans</h4>
-                    <p class="text-gray-500 font-light text-sm">Tailored completely to your unique skin.</p>
+                    <i class="fas fa-user-md text-3xl text-accent mb-4"></i>
+                    <h4 class="text-xl font-heading text-secondary mb-2">Expertise</h4>
+                    <p class="text-gray-500 font-light text-sm">Highly trained dermal clinicians.</p>
                 </div>
                 <!-- Feature 2 -->
                 <div class="text-center reveal-up p-8 border border-gray-200 rounded-xl bg-bg hover:shadow-xl transition-shadow duration-300 delay-100">
-                    <i class="fas fa-chart-line text-3xl text-accent mb-4"></i>
-                    <h4 class="text-xl font-heading text-secondary mb-2">Results driven skin programmes</h4>
-                    <p class="text-gray-500 font-light text-sm">Focused on long-term transformation.</p>
+                    <i class="fas fa-microscope text-3xl text-accent mb-4"></i>
+                    <h4 class="text-xl font-heading text-secondary mb-2">Evidence-Based</h4>
+                    <p class="text-gray-500 font-light text-sm">Clinically proven treatments & products.</p>
                 </div>
                 <!-- Feature 3 -->
                 <div class="text-center reveal-up p-8 border border-gray-200 rounded-xl bg-bg hover:shadow-xl transition-shadow duration-300 delay-200">
-                    <i class="fas fa-flask text-3xl text-accent mb-4"></i>
-                    <h4 class="text-xl font-heading text-secondary mb-2">Clinical-grade skincare</h4>
-                    <p class="text-gray-500 font-light text-sm">Backed by science and active ingredients.</p>
+                    <i class="fas fa-spa text-3xl text-accent mb-4"></i>
+                    <h4 class="text-xl font-heading text-secondary mb-2">Luxury Setting</h4>
+                    <p class="text-gray-500 font-light text-sm">A serene, calming environment.</p>
                 </div>
                 <!-- Feature 4 -->
-                <div class="text-center reveal-up p-8 border border-gray-200 rounded-xl bg-bg hover:shadow-xl transition-shadow duration-300">
-                    <i class="fas fa-leaf text-3xl text-accent mb-4"></i>
-                    <h4 class="text-xl font-heading text-secondary mb-2">Holistic approach</h4>
-                    <p class="text-gray-500 font-light text-sm">Supporting skin health and wellbeing.</p>
-                </div>
-                <!-- Feature 5 -->
-                <div class="text-center reveal-up p-8 border border-gray-200 rounded-xl bg-bg hover:shadow-xl transition-shadow duration-300 delay-100">
-                    <i class="fas fa-user-nurse text-3xl text-accent mb-4"></i>
-                    <h4 class="text-xl font-heading text-secondary mb-2">Professional consultations</h4>
-                    <p class="text-gray-500 font-light text-sm">With ongoing support at every step.</p>
-                </div>
-                <!-- Feature 6 -->
-                <div class="text-center reveal-up p-8 border border-gray-200 rounded-xl bg-bg hover:shadow-xl transition-shadow duration-300 delay-200">
-                    <i class="fas fa-spa text-3xl text-accent mb-4"></i>
-                    <h4 class="text-xl font-heading text-secondary mb-2">Luxury experience</h4>
-                    <p class="text-gray-500 font-light text-sm">In a welcoming, serene environment.</p>
+                <div class="text-center reveal-up p-8 border border-gray-200 rounded-xl bg-bg hover:shadow-xl transition-shadow duration-300 delay-300">
+                    <i class="fas fa-bullseye text-3xl text-accent mb-4"></i>
+                    <h4 class="text-xl font-heading text-secondary mb-2">Results-Driven</h4>
+                    <p class="text-gray-500 font-light text-sm">Focused on long-term skin health.</p>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- GALLERY -->
-    <section class="py-32 px-6 bg-white">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16 reveal-up">
-                <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Real Results</span>
-                <h2 class="text-4xl md:text-5xl font-heading text-secondary">Before & After</h2>
-                <p class="text-gray-500 font-light mt-4">Transformations achieved through our dedicated skin programmes.</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Gallery Item 1 -->
-                <div class="reveal-up rounded-xl overflow-hidden shadow-lg border border-gray-100 group">
-                    <div class="relative aspect-video">
-                        <img src="https://images.unsplash.com/photo-1596755389378-c11d04423447?auto=format&fit=crop&q=80&w=800" alt="Before and After" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <span class="text-white uppercase tracking-widest text-sm border border-white px-6 py-2">Acne Clearance</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Gallery Item 2 -->
-                <div class="reveal-up rounded-xl overflow-hidden shadow-lg border border-gray-100 group delay-100">
-                    <div class="relative aspect-video">
-                        <img src="https://images.unsplash.com/photo-1512496015851-a1dcbfd83049?auto=format&fit=crop&q=80&w=800" alt="Before and After" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <span class="text-white uppercase tracking-widest text-sm border border-white px-6 py-2">Pigmentation Lift</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Gallery Item 3 -->
-                <div class="reveal-up rounded-xl overflow-hidden shadow-lg border border-gray-100 group delay-200">
-                    <div class="relative aspect-video">
-                        <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&q=80&w=800" alt="Before and After" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <span class="text-white uppercase tracking-widest text-sm border border-white px-6 py-2">Skin Renewal</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- TESTIMONIALS -->
-    <section class="py-32 px-6 bg-secondary text-white relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-        <div class="max-w-6xl mx-auto relative z-10">
-            <div class="text-center mb-16 reveal-up">
-                <i class="fas fa-quote-right text-4xl text-accent mb-6"></i>
-                <h2 class="text-4xl md:text-5xl font-heading">Client Love</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Testimonial 1 -->
-                <div class="bg-white/5 p-8 border border-white/10 rounded-xl reveal-up backdrop-blur-sm">
-                    <div class="flex text-accent mb-4 text-sm">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p class="font-light italic text-gray-300 mb-6 leading-relaxed">
-                        "Valerie completely transformed my skin. I struggled with adult acne for years, and her bespoke programme cleared it up in months. Highly recommend!"
-                    </p>
-                    <p class="font-medium tracking-widest text-sm uppercase text-white">- Sarah T.</p>
-                </div>
-                <!-- Testimonial 2 -->
-                <div class="bg-white/5 p-8 border border-white/10 rounded-xl reveal-up backdrop-blur-sm delay-100">
-                    <div class="flex text-accent mb-4 text-sm">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p class="font-light italic text-gray-300 mb-6 leading-relaxed">
-                        "The most luxurious and informative facial I've ever had. My skin has never looked so glowing and plump. The clinic is absolutely beautiful."
-                    </p>
-                    <p class="font-medium tracking-widest text-sm uppercase text-white">- Emily R.</p>
-                </div>
-                <!-- Testimonial 3 -->
-                <div class="bg-white/5 p-8 border border-white/10 rounded-xl reveal-up backdrop-blur-sm delay-200">
-                    <div class="flex text-accent mb-4 text-sm">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p class="font-light italic text-gray-300 mb-6 leading-relaxed">
-                        "Her knowledge of pigmentation is unmatched. I felt so supported throughout my 12-week programme and the results speak for themselves."
-                    </p>
-                    <p class="font-medium tracking-widest text-sm uppercase text-white">- Jessica M.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
 
     <!-- FAQ -->
     <section id="faq" class="py-32 px-6 bg-bg">

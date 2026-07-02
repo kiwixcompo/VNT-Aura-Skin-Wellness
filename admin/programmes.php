@@ -114,7 +114,7 @@ $programmes = $stmt->fetchAll();
 
     <!-- Modal -->
     <div id="programmeModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden relative">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto relative">
             <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800"><i class="fas fa-times text-xl"></i></button>
             <div class="p-8 pb-4 border-b">
                 <h3 class="text-2xl font-semibold" id="modalTitle">Add Programme</h3>

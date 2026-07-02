@@ -58,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (move_uploaded_file($tmpName, $destPath)) {
             $updates['founder_image_upload'] = 'assets/images/' . $safeName;
         }
+    } elseif (isset($_FILES['founder_upload_file']) && $_FILES['founder_upload_file']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $msg = 'upload_error_' . $_FILES['founder_upload_file']['error'];
     }
     
     $stmt = $pdo->prepare('INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?');
@@ -112,7 +114,7 @@ foreach ($settingsRaw as $row) {
             <div class="bg-green-100 text-green-800 p-4 rounded mb-6 font-medium">Password updated successfully.</div>
         <?php elseif (strpos($msg, 'upload_error_') === 0): ?>
             <div class="bg-red-100 text-red-800 p-4 rounded mb-6 font-medium">
-                Video upload failed! The file may be too large for your server configuration. (Error Code: <?= htmlspecialchars(str_replace('upload_error_', '', $msg)) ?>)
+                Upload failed! The file may be too large for your server configuration. (Error Code: <?= htmlspecialchars(str_replace('upload_error_', '', $msg)) ?>)
             </div>
         <?php endif; ?>
 

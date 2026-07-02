@@ -10,7 +10,7 @@
         <div class="space-y-4 reveal-up">
             <h4 class="text-xl font-heading tracking-widest uppercase text-primary">Contact</h4>
             <p class="font-light">Leeds, United Kingdom</p>
-            <p class="font-light"><a href="mailto:valeriescorner@gmail.com" class="hover:text-primary transition-colors">valeriescorner@gmail.com</a></p>
+            <p class="font-light"><a href="mailto:vntauraskinandwellness@gmail.com" class="hover:text-primary transition-colors">vntauraskinandwellness@gmail.com</a></p>
             <div class="flex justify-center md:justify-start space-x-4 pt-2">
                 <a href="#" class="text-bg hover:text-primary transition-colors text-xl"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="text-bg hover:text-primary transition-colors text-xl"><i class="fab fa-facebook-f"></i></a>
