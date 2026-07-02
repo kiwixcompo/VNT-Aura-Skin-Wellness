@@ -1,47 +1,129 @@
-<?php require_once __DIR__ . '/database.php'; ?>
+<?php
+require_once __DIR__ . '/db.php';
+
+$seoTitle = get_setting($pdo, 'seo_title', 'VNT Aura Skin & Wellness');
+$seoDesc = get_setting($pdo, 'seo_description', 'Personalised skin consultations and evidence-based skin treatments.');
+$calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-skin-wellness');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VNT Aura Skin & Wellness</title>
-    <meta name="description" content="Personalised skin consultations and evidence-based skin treatments designed to improve skin health.">
+    <title><?= htmlspecialchars($seoTitle) ?></title>
+    <meta name="description" content="<?= htmlspecialchars($seoDesc) ?>">
+    <link rel="icon" href="assets/images/favicon.png" type="image/png">
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS (CDN for development) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#D1C5B4',
+                        secondary: '#2C362F',
+                        accent: '#A58B75',
+                        bg: '#FAF9F6',
+                        text: '#1F2421'
+                    },
+                    fontFamily: {
+                        heading: ['"Cormorant Garamond"', 'serif'],
+                        body: ['"Inter"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     
-    <!-- FontAwesome for icons -->
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"/>
+    
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+    <!-- Calendly link widget -->
+    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+    <script>
+        function openCalendly() {
+            Calendly.initPopupWidget({url: '<?= htmlspecialchars($calendlyUrl ?? 'https://calendly.com/vnt-aura-skin-wellness') ?>'});
+            return false;
+        }
+    </script>
+    
+    <script>
+        function openBookingModal() {
+            document.getElementById('bookingModal').classList.remove('hidden');
+            document.getElementById('bookingModal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            // Hide mobile menu if open
+            const mobileMenu = document.getElementById('mobile-menu');
+            if(mobileMenu) mobileMenu.classList.add('hidden');
+            return false;
+        }
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.remove('flex');
+            document.getElementById('bookingModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+        
+        // Close mobile menu on link click
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileLinks = document.querySelectorAll('#mobile-menu a');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        });
+    </script>
 </head>
-<body>
-    <!-- Header / Navigation -->
-    <header>
-        <div class="container nav-container">
-            <a href="index.php" class="logo">
-                <img src="assets/images/logo.png" alt="VNT Aura Skin & Wellness">
-            </a>
-            
-            <div class="menu-toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
+<body class="bg-bg text-text antialiased">
 
-            <nav class="nav-links" id="nav-links">
-                <a href="index.php">Home</a>
-                <a href="about.php">About</a>
-                <a href="treatments.php">Treatments</a>
-                <a href="journey.php">Journey</a>
-            </nav>
-            <a href="booking.php" class="btn btn-outline">Book Consultation</a>
+<!-- Navigation -->
+<header class="fixed w-full top-0 z-50 sylk-nav transition-all duration-300 border-b border-white/20">
+    <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
+        <!-- Logo -->
+        <a href="index.php" class="w-32 md:w-40 flex items-center">
+            <span class="font-heading text-3xl text-white tracking-widest leading-none">VNT AURA</span>
+        </a>
+        
+        <!-- Desktop Menu -->
+        <nav class="hidden md:flex space-x-10 items-center">
+            <a href="#home" class="text-white hover:text-gray-300 transition-colors font-light text-[15px]">Home</a>
+            <a href="#treatments" class="text-white hover:text-gray-300 transition-colors font-light text-[15px]">Treatments</a>
+            <a href="#programmes" class="text-white hover:text-gray-300 transition-colors font-light text-[15px]">Programmes</a>
+            <a href="#founder" class="text-white hover:text-gray-300 transition-colors font-light text-[15px]">Meet Valerie</a>
+            <a href="#contact" class="text-white hover:text-gray-300 transition-colors font-light text-[15px]">Contact</a>
+        </nav>
+
+        <!-- Right Icons -->
+        <div class="hidden md:flex items-center space-x-6">
+            <a href="admin/login.php" class="text-white hover:text-gray-300 transition-colors text-lg" title="Admin Login"><i class="fa-regular fa-user"></i></a>
+            <a href="#" onclick="openBookingModal(); return false;" class="text-white hover:text-gray-300 transition-colors text-lg" title="Book Appointment"><i class="fa-regular fa-calendar-check"></i></a>
         </div>
-    </header>
- 
+        
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-btn" class="md:hidden text-2xl text-white">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+    
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-secondary/95 backdrop-blur-md shadow-xl flex-col items-center py-8 space-y-6">
+        <a href="#home" class="text-lg text-white font-light">Home</a>
+        <a href="#treatments" class="text-lg text-white font-light">Treatments</a>
+        <a href="#programmes" class="text-lg text-white font-light">Programmes</a>
+        <a href="#founder" class="text-lg text-white font-light">Meet Valerie</a>
+        <a href="#contact" class="text-lg text-white font-light">Contact</a>
+    </div>
+</header>

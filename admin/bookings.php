@@ -1,0 +1,104 @@
+<?php
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/includes/auth.php';
+require_login();
+
+// Handle status updates
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id']) && isset($_POST['status'])) {
+    $stmt = $pdo->prepare('UPDATE bookings SET status = ? WHERE id = ?');
+    $stmt->execute([$_POST['status'], $_POST['booking_id']]);
+    header('Location: bookings.php?msg=updated');
+    exit;
+}
+
+$stmt = $pdo->query('SELECT * FROM bookings ORDER BY created_at DESC');
+$bookings = $stmt->fetchAll();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Bookings - VNT Aura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    
+    <!-- Sidebar -->
+    <div class="fixed w-64 h-full bg-white border-r border-gray-200">
+        <div class="p-6 border-b border-gray-200">
+            <h1 class="text-xl font-bold tracking-wider uppercase text-gray-900">VNT Admin</h1>
+        </div>
+        <nav class="p-4 space-y-2">
+            <a href="index.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-cog w-6"></i> Settings</a>
+            <a href="bookings.php" class="block py-2 px-4 bg-gray-100 rounded text-gray-900 font-medium"><i class="fas fa-calendar-alt w-6"></i> Bookings</a>
+            <a href="treatments.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-spa w-6"></i> Treatments</a>
+            <a href="programmes.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-layer-group w-6"></i> Programmes</a>
+            <a href="logout.php" class="block py-2 px-4 text-red-600 hover:bg-red-50 rounded transition-colors mt-8"><i class="fas fa-sign-out-alt w-6"></i> Logout</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
+        <h2 class="text-3xl font-semibold mb-8">Booking Requests</h2>
+        
+        <?php if (isset($_GET['msg']) && $_GET['msg'] === 'updated'): ?>
+            <div class="bg-green-100 text-green-800 p-4 rounded mb-6 font-medium">Booking status updated successfully.</div>
+        <?php endif; ?>
+
+        <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b">
+                        <th class="p-4 font-medium text-gray-600">Client Info</th>
+                        <th class="p-4 font-medium text-gray-600">Service & Date</th>
+                        <th class="p-4 font-medium text-gray-600">Notes</th>
+                        <th class="p-4 font-medium text-gray-600">Status</th>
+                        <th class="p-4 font-medium text-gray-600 text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <?php if (count($bookings) === 0): ?>
+                        <tr><td colspan="5" class="p-8 text-center text-gray-500">No booking requests yet.</td></tr>
+                    <?php else: ?>
+                        <?php foreach ($bookings as $b): ?>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 align-top">
+                                    <div class="font-medium text-gray-900"><?= htmlspecialchars($b['client_name']) ?></div>
+                                    <div class="text-sm text-gray-500"><?= htmlspecialchars($b['client_email']) ?></div>
+                                    <div class="text-sm text-gray-500"><?= htmlspecialchars($b['client_phone']) ?></div>
+                                </td>
+                                <td class="p-4 align-top">
+                                    <div class="font-medium text-blue-900"><?= htmlspecialchars($b['service']) ?></div>
+                                    <div class="text-sm text-gray-600"><?= date('F j, Y', strtotime($b['preferred_date'])) ?> at <?= htmlspecialchars($b['preferred_time']) ?></div>
+                                    <div class="text-xs text-gray-400 mt-1">Requested: <?= date('M j g:ia', strtotime($b['created_at'])) ?></div>
+                                </td>
+                                <td class="p-4 align-top max-w-xs text-sm text-gray-600 truncate" title="<?= htmlspecialchars($b['notes']) ?>">
+                                    <?= empty($b['notes']) ? '<em class="text-gray-400">None</em>' : htmlspecialchars($b['notes']) ?>
+                                </td>
+                                <td class="p-4 align-top">
+                                    <?php 
+                                        $color = $b['status'] === 'Approved' ? 'bg-green-100 text-green-800' : 
+                                                 ($b['status'] === 'Cancelled' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800');
+                                    ?>
+                                    <span class="px-2 py-1 rounded text-xs font-medium <?= $color ?>"><?= $b['status'] ?></span>
+                                </td>
+                                <td class="p-4 align-top text-right">
+                                    <form method="POST" action="bookings.php" class="inline-block">
+                                        <input type="hidden" name="booking_id" value="<?= $b['id'] ?>">
+                                        <select name="status" class="border rounded px-2 py-1 text-sm bg-white" onchange="this.form.submit()">
+                                            <option value="Pending" <?= $b['status'] === 'Pending' ? 'selected' : '' ?>>Pending</option>
+                                            <option value="Approved" <?= $b['status'] === 'Approved' ? 'selected' : '' ?>>Approved</option>
+                                            <option value="Cancelled" <?= $b['status'] === 'Cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                                        </select>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

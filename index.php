@@ -1,119 +1,434 @@
-<?php require_once 'includes/header.php'; ?>
+<?php
+require_once __DIR__ . '/includes/header.php';
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1><?php echo get_setting($db, 'hero_headline', 'Healthy Skin.<br><em>Calm Confidence.</em>'); ?></h1>
-                <p><?php echo htmlspecialchars(get_setting($db, 'hero_subheadline', 'Personalised skin consultations and evidence-based skin treatments designed to improve skin health and help you achieve clearer, brighter, healthier-looking skin.')); ?></p>
-                <div class="hero-buttons">
-                    <a href="booking.php" class="btn btn-primary">Book Consultation</a>
-                    <a href="treatments.php" class="btn btn-outline">Explore Treatments</a>
-                </div>
+$heroVideoType = get_setting($pdo, 'hero_video_type', 'url');
+$heroVideoUrl = get_setting($pdo, 'hero_video_url', 'https://www.w3schools.com/html/mov_bbb.mp4');
+$heroVideoUpload = get_setting($pdo, 'hero_video_upload', '');
+$heroPoster = get_setting($pdo, 'hero_poster', 'assets/images/placeholder-poster.jpg');
+
+$vidStart = get_setting($pdo, 'hero_video_start', '0');
+$vidEnd = get_setting($pdo, 'hero_video_end', '');
+$vidX = get_setting($pdo, 'hero_video_pos_x', '50');
+$vidY = get_setting($pdo, 'hero_video_pos_y', '50');
+
+// Fetch treatments
+$stmt = $pdo->query('SELECT * FROM treatments ORDER BY display_order ASC, id ASC');
+$treatments = $stmt->fetchAll();
+
+// Fetch programmes
+$stmt = $pdo->query('SELECT * FROM programmes ORDER BY display_order ASC, id ASC');
+$programmes = $stmt->fetchAll();
+
+$videoSource = ($heroVideoType === 'upload' && !empty($heroVideoUpload)) ? $heroVideoUpload : $heroVideoUrl;
+$objectStyle = "object-fit: cover; object-position: {$vidX}% {$vidY}%;";
+
+// Founder image settings
+$founderType = $settings['founder_image_type'] ?? 'url';
+$founderUrl = $settings['founder_image_url'] ?? 'assets/images/founder.jpg';
+$founderUpload = $settings['founder_image_upload'] ?? '';
+$founderX = $settings['founder_pos_x'] ?? '50';
+$founderY = $settings['founder_pos_y'] ?? '50';
+$founderSource = ($founderType === 'upload' && !empty($founderUpload)) ? $founderUpload : $founderUrl;
+$founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;";
+?>
+
+<main>
+    <!-- HERO SECTION -->
+    <section id="home" class="relative h-screen w-full overflow-hidden flex items-center justify-center">
+        <!-- Video Background -->
+        <div class="absolute inset-0 w-full h-full z-0">
+            <?php if (strpos($videoSource, 'youtube.com') !== false || strpos($videoSource, 'youtu.be') !== false): 
+                // Basic extract for youtube ID
+                $videoId = '';
+                if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $videoSource, $match)) {
+                    $videoId = $match[1];
+                }
+                
+                $ytParams = "?autoplay=1&mute=1&controls=0&loop=1&playlist={$videoId}&showinfo=0&rel=0";
+                if ($vidStart > 0) $ytParams .= "&start={$vidStart}";
+                if ($vidEnd > 0) $ytParams .= "&end={$vidEnd}";
+            ?>
+                <iframe class="w-full h-full pointer-events-none" style="<?= htmlspecialchars($objectStyle) ?> transform: scale(1.5);"
+                    src="https://www.youtube.com/embed/<?= htmlspecialchars($videoId) . $ytParams ?>" 
+                    frameborder="0" allowfullscreen></iframe>
+            <?php else: 
+                $srcUrl = htmlspecialchars($videoSource);
+                if ($vidStart > 0 || $vidEnd > 0) {
+                    $srcUrl .= "#t={$vidStart}";
+                    if ($vidEnd > 0) $srcUrl .= ",{$vidEnd}";
+                }
+            ?>
+                <video class="w-full h-full" style="<?= htmlspecialchars($objectStyle) ?>" autoplay muted loop playsinline poster="<?= htmlspecialchars($heroPoster) ?>">
+                    <source src="<?= $srcUrl ?>">
+                </video>
+            <?php endif; ?>
+            <div class="absolute inset-0 video-overlay"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-6 max-w-4xl mx-auto flex flex-col items-center">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl text-white font-body font-light mb-10 tracking-wide reveal-up" style="opacity:0;">
+                A haven of opulence and rejuvenation.
+            </h1>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center reveal-up" style="opacity:0; transition-delay: 0.2s;">
+                <a href="#" onclick="openBookingModal(); return false;" class="btn-luxury px-10 py-3 text-[15px] font-light">Book Now</a>
             </div>
-            <div class="hero-image">
-                <img src="<?php echo htmlspecialchars(get_setting($db, 'hero_image', 'assets/images/hero.png')); ?>" alt="Woman with glowing healthy skin">
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 text-bg animate-bounce flex flex-col items-center">
+            <span class="text-xs uppercase tracking-widest mb-2 opacity-70">Discover</span>
+            <i class="fas fa-chevron-down opacity-70"></i>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="py-32 px-6 bg-bg">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-heading text-secondary mb-10 reveal-up">At VNT Aura Skin & Wellness, we believe healthy skin is about more than appearance—<span class="italic text-accent">it’s about confidence.</span></h2>
+            
+            <p class="text-lg text-gray-700 leading-relaxed mb-6 reveal-up">
+                We specialise in personalised skin consultations and professional treatments tailored to your unique skin concerns and goals.
+            </p>
+            <p class="text-lg text-gray-700 leading-relaxed reveal-up">
+                Whether you’re looking to improve acne-prone skin, pigmentation, dehydration, texture or signs of skin ageing, every treatment plan begins with understanding your skin and creating a personalised journey focused on long-term skin health.
+            </p>
+        </div>
+    </section>
+
+    <!-- OUR APPROACH -->
+    <section class="py-24 px-6 bg-[#f4f2ee]">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 reveal-up">
+                <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Our Methodology</span>
+                <h2 class="text-4xl md:text-5xl font-heading text-secondary">Our Approach</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Card 1 -->
+                <div class="bg-bg p-12 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.03)] hover:-translate-y-2 transition-transform duration-500 reveal-up text-center border border-gray-100">
+                    <div class="w-16 h-16 rounded-full bg-[#f4f2ee] flex items-center justify-center text-accent text-2xl mx-auto mb-6">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3 class="text-2xl font-heading text-secondary mb-4">Consult</h3>
+                    <p class="text-gray-600 font-light leading-relaxed">
+                        We assess your skin concerns, medical history, lifestyle, skincare routine and goals.
+                    </p>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="bg-bg p-12 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.03)] hover:-translate-y-2 transition-transform duration-500 reveal-up text-center border border-gray-100 delay-100">
+                    <div class="w-16 h-16 rounded-full bg-[#f4f2ee] flex items-center justify-center text-accent text-2xl mx-auto mb-6">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h3 class="text-2xl font-heading text-secondary mb-4">Personalise</h3>
+                    <p class="text-gray-600 font-light leading-relaxed">
+                        We create a treatment plan tailored specifically to your skin using professional treatments and personalised homecare recommendations.
+                    </p>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="bg-bg p-12 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.03)] hover:-translate-y-2 transition-transform duration-500 reveal-up text-center border border-gray-100 delay-200">
+                    <div class="w-16 h-16 rounded-full bg-[#f4f2ee] flex items-center justify-center text-accent text-2xl mx-auto mb-6">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="text-2xl font-heading text-secondary mb-4">Support</h3>
+                    <p class="text-gray-600 font-light leading-relaxed">
+                        Healthy skin is a journey. We monitor your progress, adjust your treatment plan where needed and support you every step of the way.
+                    </p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Why Choose Us Section -->
-    <section class="why-us" id="why-us">
-        <div class="container">
-            <h2 class="text-center section-title">Why Choose VNT Aura</h2>
-            <div class="why-grid">
-                <div class="why-item">
-                    <i class="fa-solid fa-check-circle"></i>
-                    <span>Personalised treatment plans</span>
+    <!-- THE VNT SKIN JOURNEY -->
+    <section class="py-32 px-6 bg-secondary text-bg relative overflow-hidden">
+        <div class="max-w-4xl mx-auto relative z-10 text-center">
+            <h2 class="text-4xl md:text-5xl font-heading mb-16 reveal-up">The VNT Skin Journey</h2>
+            
+            <?php if ($vidStart > 0 || $vidEnd > 0): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const heroVideo = document.querySelector('video');
+        if (heroVideo) {
+            const start = <?= json_encode((float)$vidStart) ?>;
+            const end = <?= json_encode((float)$vidEnd) ?>;
+            
+            if (end > 0) {
+                heroVideo.addEventListener('timeupdate', function() {
+                    if (this.currentTime >= end) {
+                        this.currentTime = start;
+                        this.play();
+                    }
+                });
+            }
+        }
+    });
+</script>
+<?php endif; ?>
+
+<!-- Modal extracted to include -->
+            
+            <div class="relative border-l border-primary/30 ml-4 md:mx-auto md:border-l-0">
+                <!-- Timeline items -->
+                <?php
+                $steps = [
+                    ['title' => 'Skin Concern', 'desc' => 'We start by identifying exactly what is bothering you.'],
+                    ['title' => 'Consultation', 'desc' => 'A deep dive into your skin history, lifestyle, and goals.'],
+                    ['title' => 'Personalised Treatment Plan', 'desc' => 'A bespoke roadmap of clinical treatments and homecare.'],
+                    ['title' => 'Results', 'desc' => 'Achieving and maintaining your healthiest skin.']
+                ];
+                foreach ($steps as $index => $step): 
+                ?>
+                <div class="flex items-center mb-12 md:justify-center reveal-up group">
+                    <div class="hidden md:block w-1/2 text-right pr-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span class="text-accent italic font-heading text-xl">Step 0<?= $index + 1 ?></span>
+                    </div>
+                    <div class="absolute left-[-5px] md:relative md:left-0 w-3 h-3 rounded-full bg-primary z-10 mx-auto group-hover:scale-150 transition-transform"></div>
+                    <div class="ml-8 md:ml-0 md:w-1/2 md:text-left md:pl-8">
+                        <h4 class="text-2xl font-heading tracking-wide group-hover:text-primary transition-colors"><?= $step['title'] ?></h4>
+                        <p class="text-gray-400 mt-2 font-light text-sm"><?= $step['desc'] ?></p>
+                    </div>
                 </div>
-                <div class="why-item">
-                    <i class="fa-solid fa-check-circle"></i>
-                    <span>One-to-one client care</span>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKIN CONCERNS -->
+    <section id="concerns" class="py-24 px-6 bg-white border-b border-gray-100">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 reveal-up">
+                <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Our Expertise</span>
+                <h2 class="text-3xl md:text-4xl font-heading text-secondary">Targeted Solutions For</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 text-center reveal-up">
+                <div class="p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-shadow duration-300">
+                    <i class="fas fa-sun text-3xl text-accent mb-4"></i>
+                    <h3 class="font-heading text-secondary text-lg mb-2">Pigmentation &<br>Uneven Tone</h3>
                 </div>
-                <div class="why-item">
-                    <i class="fa-solid fa-check-circle"></i>
-                    <span>Professional skin consultations</span>
+                <div class="p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-shadow duration-300">
+                    <i class="fas fa-bacteria text-3xl text-accent mb-4"></i>
+                    <h3 class="font-heading text-secondary text-lg mb-2">Acne &<br>Congestion</h3>
                 </div>
-                <div class="why-item">
-                    <i class="fa-solid fa-check-circle"></i>
-                    <span>Evidence-based skincare approach</span>
+                <div class="p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-shadow duration-300">
+                    <i class="fas fa-droplet text-3xl text-accent mb-4"></i>
+                    <h3 class="font-heading text-secondary text-lg mb-2">Dull &<br>Dehydrated Skin</h3>
                 </div>
-                <div class="why-item">
-                    <i class="fa-solid fa-check-circle"></i>
-                    <span>Focus on long-term skin health</span>
+                <div class="p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-shadow duration-300">
+                    <i class="fas fa-fingerprint text-3xl text-accent mb-4"></i>
+                    <h3 class="font-heading text-secondary text-lg mb-2">Texture &<br>Scarring</h3>
                 </div>
-                <div class="why-item">
-                    <i class="fa-solid fa-check-circle"></i>
-                    <span>Tailored homecare recommendations</span>
-                </div>
-                <div class="why-item">
-                    <i class="fa-solid fa-check-circle"></i>
-                    <span>Inclusive approach for all skin tones</span>
-                </div>
-                <div class="why-item">
-                    <i class="fa-solid fa-check-circle"></i>
-                    <span>Calm, welcoming and relaxing environment</span>
+                <div class="p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-shadow duration-300">
+                    <i class="fas fa-leaf text-3xl text-accent mb-4"></i>
+                    <h3 class="font-heading text-secondary text-lg mb-2">Healthy<br>Ageing</h3>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section class="faq" id="faq">
-        <div class="container">
-            <h2 class="text-center section-title">Frequently Asked Questions</h2>
-            <div class="faq-accordion">
-                <details class="faq-item" name="faq">
-                    <summary>Do I need a consultation first? <i class="fa-solid fa-chevron-down"></i></summary>
-                    <div class="faq-content">
-                        <p>Yes. Every new client begins with a consultation so we can assess your skin and recommend the most appropriate treatment plan.</p>
+    <!-- TRANSFORMATIONAL TREATMENTS -->
+    <section id="treatments" class="py-32 px-6 bg-bg">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20 reveal-up">
+                <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Clinical Excellence</span>
+                <h2 class="text-4xl md:text-5xl font-heading text-secondary">Transformational Journeys</h2>
+                <p class="mt-6 text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">We focus on long-term cellular health rather than quick fixes. Explore our curated, evidence-based treatments designed to restore, rebuild, and protect your skin.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-10">
+                <?php foreach ($treatments as $t): ?>
+                <div class="group reveal-up flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-500">
+                    <div class="overflow-hidden relative aspect-[4/3]">
+                        <img src="<?= htmlspecialchars($t['image_url']) ?>" alt="<?= htmlspecialchars($t['title']) ?>" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500"></div>
                     </div>
-                </details>
-                <details class="faq-item" name="faq">
-                    <summary>How many treatments will I need? <i class="fa-solid fa-chevron-down"></i></summary>
-                    <div class="faq-content">
-                        <p>Treatment recommendations vary depending on your skin concerns, goals and how your skin responds throughout your programme.</p>
+                    
+                    <div class="p-8 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-heading text-secondary mb-3"><?= htmlspecialchars($t['title']) ?></h3>
+                        <p class="text-gray-500 font-light text-[15px] leading-relaxed mb-6 flex-grow"><?= htmlspecialchars($t['short_desc']) ?></p>
+                        
+                        <div class="space-y-4 border-t border-gray-100 pt-6 mt-auto">
+                            <!-- Detail Accordion / Modal trigger -->
+                            <button onclick="toggleTreatmentDetails(<?= $t['id'] ?>)" class="flex justify-between items-center w-full text-left text-secondary font-medium group/btn">
+                                <span class="text-sm uppercase tracking-widest text-accent">Discover the Science</span>
+                                <i class="fas fa-plus text-xs text-accent transition-transform duration-300" id="icon-<?= $t['id'] ?>"></i>
+                            </button>
+                            
+                            <!-- Hidden Details -->
+                            <div id="details-<?= $t['id'] ?>" class="hidden text-sm font-light text-gray-600 space-y-4 mt-4 pb-2 border-t border-gray-50 pt-4">
+                                <p><strong class="text-secondary font-medium block mb-1">What It Is:</strong> <?= nl2br(htmlspecialchars($t['what_it_is'])) ?></p>
+                                <p><strong class="text-secondary font-medium block mb-1">Suitable For:</strong> <?= htmlspecialchars($t['suitable_for']) ?></p>
+                                <p><strong class="text-secondary font-medium block mb-1">Key Benefits:</strong> <?= htmlspecialchars($t['key_benefits']) ?></p>
+                                <p><strong class="text-secondary font-medium block mb-1">Duration:</strong> <?= htmlspecialchars($t['duration']) ?></p>
+                                <p><strong class="text-secondary font-medium block mb-1">Course Recommendation:</strong> <?= htmlspecialchars($t['course_recommendation']) ?></p>
+                            </div>
+                            
+                            <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($t['title'])) ?>'); return false;" class="block text-center w-full py-3 bg-secondary text-white uppercase tracking-widest text-xs hover:bg-opacity-90 transition-all mt-4">Book This Treatment</a>
+                        </div>
                     </div>
-                </details>
-                <details class="faq-item" name="faq">
-                    <summary>Is there any downtime? <i class="fa-solid fa-chevron-down"></i></summary>
-                    <div class="faq-content">
-                        <p>Some treatments may involve temporary redness or sensitivity. Full aftercare guidance will be provided.</p>
-                    </div>
-                </details>
-                <details class="faq-item" name="faq">
-                    <summary>Can I receive treatment during pregnancy? <i class="fa-solid fa-chevron-down"></i></summary>
-                    <div class="faq-content">
-                        <p>Some treatments may not be suitable during pregnancy or breastfeeding. Please contact us before booking.</p>
-                    </div>
-                </details>
-                <details class="faq-item" name="faq">
-                    <summary>Do you treat all skin tones? <i class="fa-solid fa-chevron-down"></i></summary>
-                    <div class="faq-content">
-                        <p>Yes. Treatments are tailored to your individual skin type, concerns and goals following consultation.</p>
-                    </div>
-                </details>
-                <details class="faq-item" name="faq">
-                    <summary>Do you offer personalised treatment programmes? <i class="fa-solid fa-chevron-down"></i></summary>
-                    <div class="faq-content">
-                        <p>Yes. Every programme is bespoke and tailored to your individual skin needs and goals.</p>
-                    </div>
-                </details>
+                </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>
 
-    <!-- Booking CTA Section -->
-    <section class="booking-cta" id="booking">
-        <div class="container text-center">
-            <h2>Ready to Begin Your Skin Journey?</h2>
-            <p>Book your consultation today and take the first step towards healthier, more radiant skin.</p>
-            <div class="booking-buttons">
-                <a href="booking.php" class="btn btn-primary">Book Consultation</a>
-                <a href="mailto:valeriescorner@gmail.com" class="btn btn-outline" style="border-color: white; color: white;">Contact Us</a>
+    <script>
+        function toggleTreatmentDetails(id) {
+            const details = document.getElementById('details-' + id);
+            const icon = document.getElementById('icon-' + id);
+            if (details.classList.contains('hidden')) {
+                details.classList.remove('hidden');
+                icon.classList.add('rotate-45');
+            } else {
+                details.classList.add('hidden');
+                icon.classList.remove('rotate-45');
+            }
+        }
+    </script>
+
+    <!-- PROGRAMMES -->
+    <section id="programmes" class="py-32 px-6 bg-secondary text-bg">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
+                <div class="max-w-2xl">
+                    <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Curated Journeys</span>
+                    <h2 class="text-4xl md:text-5xl font-heading mb-6">Skin Programmes</h2>
+                    <p class="text-gray-400 font-light text-lg">We don't just perform treatments; we deliver results. Our clinical programmes combine multiple modalities over a set period to fundamentally transform your skin.</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
+                <?php foreach ($programmes as $p): ?>
+                <div class="group reveal-up">
+                    <div class="overflow-hidden mb-6">
+                        <img src="<?= htmlspecialchars($p['image_url']) ?>" alt="<?= htmlspecialchars($p['title']) ?>" class="w-full h-80 object-cover grayscale opacity-80 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105">
+                    </div>
+                    <div class="border-t border-gray-700 pt-6">
+                        <h3 class="text-2xl font-heading mb-3 text-white"><?= htmlspecialchars($p['title']) ?></h3>
+                        <p class="text-gray-400 font-light leading-relaxed mb-6"><?= htmlspecialchars($p['description']) ?></p>
+                        <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($p['title'])) ?>'); return false;" class="inline-flex items-center text-sm uppercase tracking-widest text-accent hover:text-white transition-colors group/link">
+                            Enquire Now 
+                            <i class="fas fa-arrow-right ml-2 transform group-hover/link:translate-x-2 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>
 
-<?php require_once 'includes/footer.php'; ?>
- 
+    <!-- ABOUT THE FOUNDER -->
+    <section id="founder" class="py-32 px-6 bg-bg">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1 reveal-up">
+                    <div class="relative w-full aspect-[4/5] rounded-tl-full rounded-tr-full overflow-hidden shadow-2xl">
+                        <img src="<?= htmlspecialchars($founderSource) ?>" alt="Valerie N Temfack" class="w-full h-full" style="<?= $founderStyle ?>">
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2 space-y-6 reveal-up">
+                    <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Meet Valerie</span>
+                    <h2 class="text-4xl md:text-5xl font-heading text-secondary">The Visionary Behind VNT Aura</h2>
+                    <p class="text-gray-700 font-light leading-relaxed text-lg">
+                        With over a decade of experience in advanced clinical aesthetics and dermal therapies, Valerie founded VNT Aura Skin & Wellness to bridge the gap between luxury relaxation and results-driven skin health.
+                    </p>
+                    <p class="text-gray-700 font-light leading-relaxed text-lg">
+                        Her philosophy is rooted in evidence-based practice and a holistic understanding of how lifestyle, internal health, and topical care intersect to create lasting skin transformations.
+                    </p>
+                    <div class="mt-10">
+                        <img src="assets/images/founder.jpg" alt="Signature" class="h-12 opacity-80" onerror="this.style.display='none'">
+                        <p class="mt-2 font-heading text-secondary text-xl">Valerie N Temfack</p>
+                        <p class="text-sm text-gray-400 uppercase tracking-widest">Founder & Lead Clinician</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section class="py-24 px-6 bg-[#f4f2ee]">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 reveal-up">
+                <h2 class="text-4xl md:text-5xl font-heading text-secondary">Why Choose Us</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Feature 1 -->
+                <div class="text-center reveal-up p-8 border border-gray-200 rounded-xl bg-bg hover:shadow-xl transition-shadow duration-300">
+                    <i class="fas fa-user-md text-3xl text-accent mb-4"></i>
+                    <h4 class="text-xl font-heading text-secondary mb-2">Expertise</h4>
+                    <p class="text-gray-500 font-light text-sm">Highly trained dermal clinicians.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="text-center reveal-up p-8 border border-gray-200 rounded-xl bg-bg hover:shadow-xl transition-shadow duration-300 delay-100">
+                    <i class="fas fa-microscope text-3xl text-accent mb-4"></i>
+                    <h4 class="text-xl font-heading text-secondary mb-2">Evidence-Based</h4>
+                    <p class="text-gray-500 font-light text-sm">Clinically proven treatments & products.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="text-center reveal-up p-8 border border-gray-200 rounded-xl bg-bg hover:shadow-xl transition-shadow duration-300 delay-200">
+                    <i class="fas fa-spa text-3xl text-accent mb-4"></i>
+                    <h4 class="text-xl font-heading text-secondary mb-2">Luxury Setting</h4>
+                    <p class="text-gray-500 font-light text-sm">A serene, calming environment.</p>
+                </div>
+                <!-- Feature 4 -->
+                <div class="text-center reveal-up p-8 border border-gray-200 rounded-xl bg-bg hover:shadow-xl transition-shadow duration-300 delay-300">
+                    <i class="fas fa-bullseye text-3xl text-accent mb-4"></i>
+                    <h4 class="text-xl font-heading text-secondary mb-2">Results-Driven</h4>
+                    <p class="text-gray-500 font-light text-sm">Focused on long-term skin health.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-32 px-6 bg-bg">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-16 reveal-up">
+                <h2 class="text-4xl md:text-5xl font-heading text-secondary">Frequently Asked Questions</h2>
+            </div>
+            
+            <div class="space-y-4 reveal-up">
+                <!-- FAQ Item 1 -->
+                <div class="border-b border-gray-200 pb-4 faq-item group cursor-pointer">
+                    <div class="flex justify-between items-center py-4">
+                        <h4 class="text-xl font-heading text-secondary group-hover:text-accent transition-colors">How do I know which treatment to book?</h4>
+                        <i class="fas fa-plus text-accent transition-transform duration-300 transform faq-icon"></i>
+                    </div>
+                    <div class="faq-content hidden text-gray-600 font-light leading-relaxed pb-4">
+                        If you are a new client, we always recommend booking a Skin Consultation first. This allows us to thoroughly assess your skin and recommend the most suitable treatment pathway.
+                    </div>
+                </div>
+                <!-- FAQ Item 2 -->
+                <div class="border-b border-gray-200 pb-4 faq-item group cursor-pointer">
+                    <div class="flex justify-between items-center py-4">
+                        <h4 class="text-xl font-heading text-secondary group-hover:text-accent transition-colors">Do you offer payment plans?</h4>
+                        <i class="fas fa-plus text-accent transition-transform duration-300 transform faq-icon"></i>
+                    </div>
+                    <div class="faq-content hidden text-gray-600 font-light leading-relaxed pb-4">
+                        Yes, we offer flexible payment options for our comprehensive skin programmes to ensure your skin health journey is accessible.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT CTA -->
+    <section id="contact" class="py-40 px-6 bg-[url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center relative bg-fixed">
+        <div class="absolute inset-0 bg-secondary/80"></div>
+        <div class="relative z-10 max-w-4xl mx-auto text-center reveal-up">
+            <h2 class="text-5xl md:text-7xl font-heading text-primary mb-8">Ready to Begin Your Skin Journey?</h2>
+            <p class="text-xl text-gray-300 font-light mb-12 max-w-2xl mx-auto">
+                Book your consultation today and take the first step towards healthier, more radiant skin.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <a href="#" onclick="openBookingModal(); return false;" class="btn-luxury inline-block px-10 py-4 bg-white/10 backdrop-blur-sm border border-white/30 text-white uppercase tracking-widest text-sm hover:bg-white hover:text-secondary transition-all duration-300 shadow-lg">Book Consultation</a>
+                <a href="mailto:valeriescorner@gmail.com" class="btn-luxury px-10 py-5 border border-primary text-primary uppercase tracking-widest text-sm font-semibold hover:bg-primary hover:text-secondary transition-colors">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+
+<?php require_once __DIR__ . '/includes/booking_modal.php'; ?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
