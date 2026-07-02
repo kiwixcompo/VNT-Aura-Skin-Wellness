@@ -3,3 +3,5 @@ Thumbs.db
 *.log
 node_modules/
 vendor/
+.env
+includes/db.php
