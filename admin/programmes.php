@@ -92,7 +92,8 @@ $programmes = $stmt->fetchAll();
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($programmes as $p): ?>
                 <div class="bg-white rounded-xl shadow-sm border overflow-hidden flex flex-col">
-                    <img src="<?= htmlspecialchars($p['image_url']) ?>" alt="Programme" class="h-48 w-full object-cover">
+                    <?php $imgSrc = (strpos($p['image_url'], 'http') === 0 || strpos($p['image_url'], '/') === 0) ? $p['image_url'] : '../' . $p['image_url']; ?>
+                    <img src="<?= htmlspecialchars($imgSrc) ?>" alt="Programme" class="h-48 w-full object-cover">
                     <div class="p-6 flex-grow">
                         <h3 class="text-xl font-bold mb-2"><?= htmlspecialchars($p['title']) ?></h3>
                         <p class="text-sm text-gray-600 line-clamp-3 mb-4"><?= htmlspecialchars($p['description']) ?></p>

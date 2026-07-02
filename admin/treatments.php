@@ -97,7 +97,8 @@ $treatments = $stmt->fetchAll();
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($treatments as $t): ?>
                 <div class="bg-white rounded-xl shadow-sm border overflow-hidden flex flex-col">
-                    <img src="<?= htmlspecialchars($t['image_url']) ?>" alt="Treatment" class="h-48 w-full object-cover">
+                    <?php $imgSrc = (strpos($t['image_url'], 'http') === 0 || strpos($t['image_url'], '/') === 0) ? $t['image_url'] : '../' . $t['image_url']; ?>
+                    <img src="<?= htmlspecialchars($imgSrc) ?>" alt="Treatment" class="h-48 w-full object-cover">
                     <div class="p-6 flex-grow">
                         <h3 class="text-xl font-bold mb-2"><?= htmlspecialchars($t['title']) ?></h3>
                         <p class="text-sm text-gray-600 line-clamp-2 mb-4"><?= htmlspecialchars($t['short_desc']) ?></p>
