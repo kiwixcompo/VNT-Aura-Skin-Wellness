@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     if (mobileMenuBtn && mobileMenu) {
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
         });
     }
 

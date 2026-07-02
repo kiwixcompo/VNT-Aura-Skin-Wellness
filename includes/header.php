@@ -66,7 +66,10 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
             document.body.style.overflow = 'hidden';
             // Hide mobile menu if open
             const mobileMenu = document.getElementById('mobile-menu');
-            if(mobileMenu) mobileMenu.classList.add('hidden');
+            if(mobileMenu) {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+            }
             return false;
         }
         function closeBookingModal() {
@@ -82,6 +85,7 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
             mobileLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('flex');
                 });
             });
         });

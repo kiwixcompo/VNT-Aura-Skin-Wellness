@@ -26,7 +26,8 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    // Instead of throwing a fatal 500 error, show a friendly message for debugging
+    die("Database Connection Error: " . $e->getMessage() . "<br><br><strong>Note:</strong> If you just uploaded this to a live server, you need to update your database credentials (DB_NAME, DB_USER, DB_PASS) in the .env file or directly in includes/db.php to match your live hosting environment.");
 }
 
 function get_setting($pdo, $key, $default = null) {
