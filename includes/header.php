@@ -90,7 +90,7 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
 <body class="bg-bg text-text antialiased">
 
 <!-- Navigation -->
-<header class="fixed w-full top-0 z-50 sylk-nav transition-all duration-300 border-b border-white/20">
+<header class="fixed w-full top-0 z-50 sylk-nav transition-all duration-300 border-b border-white/20 <?= htmlspecialchars($navClass ?? '') ?>">
     <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
         <!-- Logo -->
         <a href="index.php" class="w-32 md:w-40 flex items-center">

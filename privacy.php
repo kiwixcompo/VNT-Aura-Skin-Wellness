@@ -1,4 +1,7 @@
-<?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php
+$navClass = 'scrolled';
+require_once __DIR__ . '/includes/header.php';
+?>
 
 <main class="pt-32 pb-24 bg-bg text-text min-h-screen">
     <div class="max-w-4xl mx-auto px-6">
