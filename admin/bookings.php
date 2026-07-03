@@ -3,6 +3,15 @@ require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/includes/auth.php';
 require_login();
 
+
+// Handle deletion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_booking_id'])) {
+    $stmt = $pdo->prepare('DELETE FROM bookings WHERE id = ?');
+    $stmt->execute([$_POST['delete_booking_id']]);
+    header('Location: bookings.php?msg=deleted');
+    exit;
+}
+
 // Handle status updates
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id']) && isset($_POST['status'])) {
     $bookingId = $_POST['booking_id'];
@@ -18,22 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id']) && isse
         $stmt->execute([$newStatus, $bookingId]);
         
         // Fetch email settings
-        $stmt = $pdo->prepare('SELECT setting_value FROM settings WHERE setting_key = ?');
-        
-        function fetch_setting($pdo, $key, $default = '') {
-            $s = $pdo->prepare('SELECT setting_value FROM settings WHERE setting_key = ?');
-            $s->execute([$key]);
-            $val = $s->fetchColumn();
-            return $val !== false ? $val : $default;
-        }
-
-        $smtp_username = fetch_setting($pdo, 'smtp_username', '');
-        $smtp_password = fetch_setting($pdo, 'smtp_password', '');
+        $smtp_username = get_setting($pdo, 'smtp_username', '');
+        $smtp_password = get_setting($pdo, 'smtp_password', '');
         
         if (!empty($smtp_username) && !empty($smtp_password)) {
             require_once __DIR__ . '/../vendor/autoload.php';
-            $smtp_host = fetch_setting($pdo, 'smtp_host', 'smtp.gmail.com');
-            $smtp_port = fetch_setting($pdo, 'smtp_port', '587');
+            $smtp_host = get_setting($pdo, 'smtp_host', 'smtp.gmail.com');
+            $smtp_port = get_setting($pdo, 'smtp_port', '587');
             
             $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
             try {
