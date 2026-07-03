@@ -19,6 +19,16 @@ $treatments = $stmt->fetchAll();
 $stmt = $pdo->query('SELECT * FROM programmes ORDER BY display_order ASC, id ASC');
 $programmes = $stmt->fetchAll();
 
+$stmt = $pdo->query("SELECT * FROM faqs ORDER BY display_order ASC, id ASC");
+$faqs = $stmt->fetchAll();
+
+$stmt = $pdo->query("SELECT * FROM testimonials ORDER BY display_order ASC, id ASC");
+$testimonials = $stmt->fetchAll();
+
+$stmt = $pdo->query("SELECT * FROM gallery ORDER BY display_order ASC, id ASC");
+$gallery_items = $stmt->fetchAll();
+
+
 $videoSource = ($heroVideoType === 'upload' && !empty($heroVideoUpload)) ? $heroVideoUpload : $heroVideoUrl;
 $objectStyle = "object-fit: cover; object-position: {$vidX}% {$vidY}%;";
 

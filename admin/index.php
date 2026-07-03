@@ -21,8 +21,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'founder_pos_x' => $_POST['founder_pos_x'] ?? '50',
         'founder_pos_y' => $_POST['founder_pos_y'] ?? '50',
         'seo_title' => $_POST['seo_title'] ?? '',
-        'seo_description' => $_POST['seo_description'] ?? ''
-    ];
+        'seo_description' => $_POST['seo_description'] ?? '',
+        
+        'consultation_title' => $_POST['consultation_title'] ?? '',
+        'consultation_subtitle' => $_POST['consultation_subtitle'] ?? '',
+        'consultation_text' => $_POST['consultation_text'] ?? '',
+        'consultation_price' => $_POST['consultation_price'] ?? '',
+        'consultation_note' => $_POST['consultation_note'] ?? '',
+        'consultation_bullets' => $_POST['consultation_bullets'] ?? '',
+        'journeys_title' => $_POST['journeys_title'] ?? '',
+        'journeys_subtitle' => $_POST['journeys_subtitle'] ?? '',
+        'journeys_text' => $_POST['journeys_text'] ?? '',
+        'therapies_title' => $_POST['therapies_title'] ?? '',
+        'therapies_subtitle' => $_POST['therapies_subtitle'] ?? '',
+        'therapies_text' => $_POST['therapies_text'] ?? '',
+        'about_title' => $_POST['about_title'] ?? '',
+        'about_text1' => $_POST['about_text1'] ?? '',
+        'about_text2' => $_POST['about_text2'] ?? '',
+        'about_text3' => $_POST['about_text3'] ?? '',
+        'about_quote' => $_POST['about_quote'] ?? '',
+        'about_author' => $_POST['about_author'] ?? '',
+        'bio_title' => $_POST['bio_title'] ?? '',
+        'bio_subtitle' => $_POST['bio_subtitle'] ?? '',
+        'bio_text' => $_POST['bio_text'] ?? '',
+        'results_title' => $_POST['results_title'] ?? '',
+        'faqs_title' => $_POST['faqs_title'] ?? '',
+        'contact_title' => $_POST['contact_title'] ?? '',
+        'contact_address' => $_POST['contact_address'] ?? '',
+        'contact_phone' => $_POST['contact_phone'] ?? '',
+        'contact_email_display' => $_POST['contact_email_display'] ?? '',
+        'contact_hours' => $_POST['contact_hours'] ?? '',
+        'admin_email' => $_POST['admin_email'] ?? '',
+        'notify_admin' => isset($_POST['notify_admin']) ? '1' : '0',
+        'notify_client' => isset($_POST['notify_client']) ? '1' : '0'    ];
     
     // Check for file upload
     if (isset($_FILES['video_upload_file']) && $_FILES['video_upload_file']['error'] === UPLOAD_ERR_OK) {
@@ -100,6 +131,11 @@ foreach ($settingsRaw as $row) {
             <a href="bookings.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-calendar-alt w-6"></i> Bookings</a>
             <a href="treatments.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-spa w-6"></i> Advanced Therapies</a>
             <a href="programmes.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-layer-group w-6"></i> Skin Journeys</a>
+            
+            <p class="px-4 pt-4 text-xs font-bold text-gray-400 uppercase">CMS Content</p>
+            <a href="faqs.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-question-circle w-6"></i> FAQs</a>
+            <a href="testimonials.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-comment-dots w-6"></i> Testimonials</a>
+            <a href="gallery.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-images w-6"></i> Gallery</a>
             <a href="logout.php" class="block py-2 px-4 text-red-600 hover:bg-red-50 rounded transition-colors mt-8"><i class="fas fa-sign-out-alt w-6"></i> Logout</a>
         </nav>
     </div>
@@ -229,6 +265,107 @@ foreach ($settingsRaw as $row) {
                             <label class="block text-sm text-gray-600 mb-1">Y-Position (Vertical %)</label>
                             <input type="range" name="founder_pos_y" id="fYSlider" min="0" max="100" value="<?= htmlspecialchars($settings['founder_pos_y'] ?? '50') ?>" class="w-full">
                             <span id="fYVal" class="text-xs text-gray-500"><?= htmlspecialchars($settings['founder_pos_y'] ?? '50') ?>%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <!-- CMS Content Sections -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-8">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Consultation Section</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label class="block text-gray-700 font-medium mb-1">Title</label><input type="text" name="consultation_title" value="<?= htmlspecialchars($settings['consultation_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Subtitle</label><input type="text" name="consultation_subtitle" value="<?= htmlspecialchars($settings['consultation_subtitle'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div class="md:col-span-2"><label class="block text-gray-700 font-medium mb-1">Text</label><textarea name="consultation_text" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['consultation_text'] ?? '') ?></textarea></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Price</label><input type="text" name="consultation_price" value="<?= htmlspecialchars($settings['consultation_price'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Note</label><input type="text" name="consultation_note" value="<?= htmlspecialchars($settings['consultation_note'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div class="md:col-span-2"><label class="block text-gray-700 font-medium mb-1">Bullets (one per line)</label><textarea name="consultation_bullets" rows="4" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['consultation_bullets'] ?? '') ?></textarea></div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-8">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Skin Journeys & Therapies Titles</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label class="block text-gray-700 font-medium mb-1">Journeys Title</label><input type="text" name="journeys_title" value="<?= htmlspecialchars($settings['journeys_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Journeys Subtitle</label><input type="text" name="journeys_subtitle" value="<?= htmlspecialchars($settings['journeys_subtitle'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div class="md:col-span-2"><label class="block text-gray-700 font-medium mb-1">Journeys Text</label><textarea name="journeys_text" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['journeys_text'] ?? '') ?></textarea></div>
+                    
+                    <div><label class="block text-gray-700 font-medium mb-1">Therapies Title</label><input type="text" name="therapies_title" value="<?= htmlspecialchars($settings['therapies_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Therapies Subtitle</label><input type="text" name="therapies_subtitle" value="<?= htmlspecialchars($settings['therapies_subtitle'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div class="md:col-span-2"><label class="block text-gray-700 font-medium mb-1">Therapies Text</label><textarea name="therapies_text" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['therapies_text'] ?? '') ?></textarea></div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-8">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">About Section</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div><label class="block text-gray-700 font-medium mb-1">Title</label><input type="text" name="about_title" value="<?= htmlspecialchars($settings['about_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Text Paragraph 1</label><textarea name="about_text1" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['about_text1'] ?? '') ?></textarea></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Text Paragraph 2</label><textarea name="about_text2" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['about_text2'] ?? '') ?></textarea></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Text Paragraph 3</label><textarea name="about_text3" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['about_text3'] ?? '') ?></textarea></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Quote</label><input type="text" name="about_quote" value="<?= htmlspecialchars($settings['about_quote'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Quote Author</label><input type="text" name="about_author" value="<?= htmlspecialchars($settings['about_author'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    
+                    <h4 class="font-medium mt-4">Bio Sub-section</h4>
+                    <div><label class="block text-gray-700 font-medium mb-1">Bio Title</label><input type="text" name="bio_title" value="<?= htmlspecialchars($settings['bio_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Bio Subtitle</label><input type="text" name="bio_subtitle" value="<?= htmlspecialchars($settings['bio_subtitle'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Bio Text (Markdown/Linebreaks support)</label><textarea name="bio_text" rows="5" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['bio_text'] ?? '') ?></textarea></div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-8">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Other Headings</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label class="block text-gray-700 font-medium mb-1">Results Title</label><input type="text" name="results_title" value="<?= htmlspecialchars($settings['results_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">FAQs Title</label><input type="text" name="faqs_title" value="<?= htmlspecialchars($settings['faqs_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-8">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Contact & Footer</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label class="block text-gray-700 font-medium mb-1">Contact Title</label><input type="text" name="contact_title" value="<?= htmlspecialchars($settings['contact_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Display Email</label><input type="text" name="contact_email_display" value="<?= htmlspecialchars($settings['contact_email_display'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Address</label><input type="text" name="contact_address" value="<?= htmlspecialchars($settings['contact_address'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Phone</label><input type="text" name="contact_phone" value="<?= htmlspecialchars($settings['contact_phone'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div class="md:col-span-2"><label class="block text-gray-700 font-medium mb-1">Opening Hours (one per line)</label><textarea name="contact_hours" rows="4" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['contact_hours'] ?? '') ?></textarea></div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-8 border-l-4 border-l-blue-500">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Email Notifications</h3>
+                <p class="text-gray-500 text-sm mb-4">Configure email alerts for new bookings. The system will use standard PHP mail(), which requires a functioning local SMTP (like MailHog) or a live server environment to actually send emails.</p>
+                <div class="grid grid-cols-1 gap-4">
+                    <div><label class="block text-gray-700 font-medium mb-1">Admin Alert Email</label><input type="email" name="admin_email" value="<?= htmlspecialchars($settings['admin_email'] ?? '') ?>" class="w-full px-4 py-2 border rounded" placeholder="Where should new booking alerts go?"></div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="notify_admin" name="notify_admin" value="1" <?= ($settings['notify_admin'] ?? '1') == '1' ? 'checked' : '' ?> class="w-5 h-5 text-blue-600 rounded">
+                        <label for="notify_admin" class="ml-2 text-gray-700 font-medium">Send Email to Admin on New Booking</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="notify_client" name="notify_client" value="1" <?= ($settings['notify_client'] ?? '1') == '1' ? 'checked' : '' ?> class="w-5 h-5 text-blue-600 rounded">
+                        <label for="notify_client" class="ml-2 text-gray-700 font-medium">Send Confirmation Email to Client</label>
+                    </div>
+                </div>
+                <div class="mt-6 border-t pt-4">
+                    <h4 class="font-medium text-gray-800 mb-2">SMTP Settings (For sending emails)</h4>
+                    <p class="text-xs text-gray-500 mb-4">Because you have 2FA enabled on your Google account, you must generate an <a href="https://myaccount.google.com/apppasswords" target="_blank" class="text-blue-500 underline">App Password</a> to use here.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1 text-sm">SMTP Host</label>
+                            <input type="text" name="smtp_host" value="<?= htmlspecialchars($settings['smtp_host'] ?? 'smtp.gmail.com') ?>" class="w-full px-4 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1 text-sm">SMTP Port</label>
+                            <input type="text" name="smtp_port" value="<?= htmlspecialchars($settings['smtp_port'] ?? '587') ?>" class="w-full px-4 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1 text-sm">Gmail Address (Username)</label>
+                            <input type="email" name="smtp_username" value="<?= htmlspecialchars($settings['smtp_username'] ?? '') ?>" class="w-full px-4 py-2 border rounded text-sm" placeholder="yourname@gmail.com">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1 text-sm">App Password</label>
+                            <input type="password" name="smtp_password" value="<?= htmlspecialchars($settings['smtp_password'] ?? '') ?>" class="w-full px-4 py-2 border rounded text-sm" placeholder="16-character App Password">
                         </div>
                     </div>
                 </div>
