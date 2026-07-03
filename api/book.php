@@ -30,15 +30,15 @@ try {
     require_once __DIR__ . '/../vendor/autoload.php';
     
     // Fetch email settings
-    $admin_email = get_setting('admin_email', 'hello@vntaura.com');
-    $notify_admin = get_setting('notify_admin', '1') == '1';
-    $notify_client = get_setting('notify_client', '1') == '1';
+    $admin_email = get_setting($pdo, 'admin_email', 'hello@vntaura.com');
+    $notify_admin = get_setting($pdo, 'notify_admin', '1') == '1';
+    $notify_client = get_setting($pdo, 'notify_client', '1') == '1';
     
     // Fetch SMTP settings
-    $smtp_host = get_setting('smtp_host', 'smtp.gmail.com');
-    $smtp_port = get_setting('smtp_port', '587');
-    $smtp_username = get_setting('smtp_username', '');
-    $smtp_password = get_setting('smtp_password', '');
+    $smtp_host = get_setting($pdo, 'smtp_host', 'smtp.gmail.com');
+    $smtp_port = get_setting($pdo, 'smtp_port', '587');
+    $smtp_username = get_setting($pdo, 'smtp_username', '');
+    $smtp_password = get_setting($pdo, 'smtp_password', '');
     
     function send_smtp_email($to, $subject, $body, $smtp_host, $smtp_port, $smtp_username, $smtp_password) {
         $mail = new \PHPMailer\PHPMailer\PHPMailer(true);

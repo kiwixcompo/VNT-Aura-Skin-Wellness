@@ -70,7 +70,6 @@ $treatments = $stmt->fetchAll();
         <div class="p-6 border-b border-gray-200">
             <h1 class="text-xl font-bold tracking-wider uppercase text-gray-900">VNT Admin</h1>
         </div>
-        \1
             <a href="index.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-cog w-6"></i> Settings</a>
                         <a href="bookings.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-calendar-alt w-6"></i> Bookings</a>
                         <a href="treatments.php" class="block py-2 px-4 bg-gray-100 text-gray-900 font-medium rounded transition-colors"><i class="fas fa-spa w-6"></i> Advanced Therapies</a>
@@ -82,7 +81,6 @@ $treatments = $stmt->fetchAll();
                         <a href="gallery.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-images w-6"></i> Gallery</a>
             
                         <a href="logout.php" class="block py-2 px-4 text-red-600 hover:bg-red-50 rounded transition-colors mt-8"><i class="fas fa-sign-out-alt w-6"></i> Logout</a>
-        \3
     </div>
 
     <!-- Main Content -->

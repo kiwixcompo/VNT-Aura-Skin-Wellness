@@ -5,8 +5,66 @@ require_login();
 
 // Handle status updates
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id']) && isset($_POST['status'])) {
-    $stmt = $pdo->prepare('UPDATE bookings SET status = ? WHERE id = ?');
-    $stmt->execute([$_POST['status'], $_POST['booking_id']]);
+    $bookingId = $_POST['booking_id'];
+    $newStatus = $_POST['status'];
+    
+    // Fetch current status and client details
+    $stmt = $pdo->prepare('SELECT client_email, client_name, status, service, preferred_date, preferred_time FROM bookings WHERE id = ?');
+    $stmt->execute([$bookingId]);
+    $booking = $stmt->fetch();
+    
+    if ($booking && $booking['status'] !== $newStatus) {
+        $stmt = $pdo->prepare('UPDATE bookings SET status = ? WHERE id = ?');
+        $stmt->execute([$newStatus, $bookingId]);
+        
+        // Fetch email settings
+        $stmt = $pdo->prepare('SELECT setting_value FROM settings WHERE setting_key = ?');
+        
+        function fetch_setting($pdo, $key, $default = '') {
+            $s = $pdo->prepare('SELECT setting_value FROM settings WHERE setting_key = ?');
+            $s->execute([$key]);
+            $val = $s->fetchColumn();
+            return $val !== false ? $val : $default;
+        }
+
+        $smtp_username = fetch_setting($pdo, 'smtp_username', '');
+        $smtp_password = fetch_setting($pdo, 'smtp_password', '');
+        
+        if (!empty($smtp_username) && !empty($smtp_password)) {
+            require_once __DIR__ . '/../vendor/autoload.php';
+            $smtp_host = fetch_setting($pdo, 'smtp_host', 'smtp.gmail.com');
+            $smtp_port = fetch_setting($pdo, 'smtp_port', '587');
+            
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host       = $smtp_host;
+                $mail->SMTPAuth   = true;
+                $mail->Username   = $smtp_username;
+                $mail->Password   = $smtp_password;
+                $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = $smtp_port;
+
+                $mail->setFrom($smtp_username, 'VNT Aura Skin & Wellness');
+                $mail->addAddress($booking['client_email']);
+
+                $mail->isHTML(true);
+                $mail->Subject = "Your Booking Status: " . ucfirst($newStatus);
+                $mail->Body    = "
+                    <h3>Hello " . htmlspecialchars($booking['client_name']) . ",</h3>
+                    <p>The status of your booking for <strong>" . htmlspecialchars($booking['service']) . "</strong> on " . htmlspecialchars($booking['preferred_date']) . " at " . htmlspecialchars($booking['preferred_time']) . " has been updated to: <strong style='text-transform: uppercase;'>" . htmlspecialchars($newStatus) . "</strong>.</p>
+                    <p>If you have any questions, please contact us.</p>
+                    <br>
+                    <p>Best regards,<br>VNT Aura Skin & Wellness</p>
+                ";
+                $mail->send();
+            } catch (Exception $e) {
+                // Log error or ignore
+                error_log("Failed to send status update email: " . $mail->ErrorInfo);
+            }
+        }
+    }
+    
     header('Location: bookings.php?msg=updated');
     exit;
 }
@@ -29,7 +87,6 @@ $bookings = $stmt->fetchAll();
         <div class="p-6 border-b border-gray-200">
             <h1 class="text-xl font-bold tracking-wider uppercase text-gray-900">VNT Admin</h1>
         </div>
-        \1
             <a href="index.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-cog w-6"></i> Settings</a>
                         <a href="bookings.php" class="block py-2 px-4 bg-gray-100 text-gray-900 font-medium rounded transition-colors"><i class="fas fa-calendar-alt w-6"></i> Bookings</a>
                         <a href="treatments.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-spa w-6"></i> Advanced Therapies</a>
@@ -41,7 +98,6 @@ $bookings = $stmt->fetchAll();
                         <a href="gallery.php" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded transition-colors"><i class="fas fa-images w-6"></i> Gallery</a>
             
                         <a href="logout.php" class="block py-2 px-4 text-red-600 hover:bg-red-50 rounded transition-colors mt-8"><i class="fas fa-sign-out-alt w-6"></i> Logout</a>
-        \3
     </div>
 
     <!-- Main Content -->
