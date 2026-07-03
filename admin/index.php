@@ -60,7 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contact_hours' => $_POST['contact_hours'] ?? '',
         'admin_email' => $_POST['admin_email'] ?? '',
         'notify_admin' => isset($_POST['notify_admin']) ? '1' : '0',
-        'notify_client' => isset($_POST['notify_client']) ? '1' : '0'    ];
+        'notify_client' => isset($_POST['notify_client']) ? '1' : '0',
+        'smtp_host' => $_POST['smtp_host'] ?? '',
+        'smtp_port' => $_POST['smtp_port'] ?? '',
+        'smtp_username' => $_POST['smtp_username'] ?? '',
+        'smtp_password' => $_POST['smtp_password'] ?? ''
+    ];
     
     // Check for file upload
     if (isset($_FILES['site_logo']) && $_FILES['site_logo']['error'] === UPLOAD_ERR_OK) {
