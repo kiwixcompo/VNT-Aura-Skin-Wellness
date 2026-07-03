@@ -188,12 +188,14 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                 <?php foreach ($treatments as $t): ?>
                 <div class="group reveal-up flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-500">
                     <div class="p-8 flex flex-col flex-grow">
-                        <div class="flex justify-between items-start mb-4 border-b border-gray-100 pb-4">
-                            <h3 class="text-2xl font-heading text-secondary pr-4"><?= htmlspecialchars($t['title']) ?></h3>
-                            <div class="text-right flex-shrink-0">
-                                <span class="block text-accent font-medium"><?= htmlspecialchars($t['course_recommendation']) ?></span>
-                                <span class="block text-gray-500 text-sm"><?= htmlspecialchars($t['duration']) ?></span>
+                        <div class="mb-4 border-b border-gray-100 pb-4 flex flex-col items-start gap-1">
+                            <div class="flex justify-between items-start w-full">
+                                <h3 class="text-2xl font-heading text-secondary pr-4"><?= htmlspecialchars($t['title']) ?></h3>
+                                <span class="block text-gray-500 text-sm flex-shrink-0 whitespace-nowrap pt-1"><?= htmlspecialchars($t['duration']) ?></span>
                             </div>
+                            <?php if (!empty($t['course_recommendation'])): ?>
+                            <span class="block text-accent font-medium text-sm mt-1 leading-tight"><?= htmlspecialchars($t['course_recommendation']) ?></span>
+                            <?php endif; ?>
                         </div>
                         <p class="text-gray-500 font-light text-[15px] leading-relaxed mb-6 flex-grow"><?= htmlspecialchars($t['short_desc']) ?></p>
                         
