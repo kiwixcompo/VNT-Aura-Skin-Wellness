@@ -4,6 +4,15 @@ require_once __DIR__ . '/db.php';
 $seoTitle = get_setting($pdo, 'seo_title', 'VNT Aura Skin & Wellness');
 $seoDesc = get_setting($pdo, 'seo_description', 'Personalised skin consultations and evidence-based skin treatments.');
 $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-skin-wellness');
+
+        $themePrimary = get_setting($pdo, 'theme_primary', '#D1C5B4');
+        $themeSecondary = get_setting($pdo, 'theme_secondary', '#2C362F');
+        $themeAccent = get_setting($pdo, 'theme_accent', '#A58B75');
+        $themeBg = get_setting($pdo, 'theme_bg', '#FAF9F6');
+        $themeText = get_setting($pdo, 'theme_text', '#1F2421');
+        
+        $siteLogo = get_setting($pdo, 'site_logo', '');
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +21,11 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($seoTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($seoDesc) ?>">
-    <link rel="icon" href="assets/images/favicon.png" type="image/png">
+        <?php if (!empty($siteLogo)): ?>
+        <link rel="icon" href="<?= htmlspecialchars($siteLogo) ?>" type="image/png">
+    <?php else: ?>
+        <link rel="icon" href="assets/images/favicon.png" type="image/png">
+    <?php endif; ?>
     
     <!-- Tailwind CSS (CDN for development) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,11 +34,11 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
             theme: {
                 extend: {
                     colors: {
-                        primary: '#D1C5B4',
-                        secondary: '#2C362F',
-                        accent: '#A58B75',
-                        bg: '#FAF9F6',
-                        text: '#1F2421'
+                        primary: '<?= htmlspecialchars($themePrimary) ?>',
+                        secondary: '<?= htmlspecialchars($themeSecondary) ?>',
+                        accent: '<?= htmlspecialchars($themeAccent) ?>',
+                        bg: '<?= htmlspecialchars($themeBg) ?>',
+                        text: '<?= htmlspecialchars($themeText) ?>'
                     },
                     fontFamily: {
                         heading: ['"Cormorant Garamond"', 'serif'],
@@ -98,7 +111,11 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
     <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
         <!-- Logo -->
         <a href="index.php" class="w-32 md:w-40 flex items-center">
-            <span class="font-heading text-3xl text-white tracking-widest leading-none">VNT AURA</span>
+            <?php if (!empty($siteLogo)): ?>
+                <img src="<?= htmlspecialchars($siteLogo) ?>" alt="VNT Aura Logo" class="w-full h-auto object-contain">
+            <?php else: ?>
+                <span class="font-heading text-3xl text-white tracking-widest leading-none">VNT AURA</span>
+            <?php endif; ?>
         </a>
         
         <!-- Desktop Menu -->

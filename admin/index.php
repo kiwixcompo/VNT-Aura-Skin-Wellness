@@ -8,6 +8,13 @@ $msg = $_GET['msg'] ?? '';
 // Handle settings update
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updates = [
+        
+        'theme_primary' => $_POST['theme_primary'] ?? '#D1C5B4',
+        'theme_secondary' => $_POST['theme_secondary'] ?? '#2C362F',
+        'theme_accent' => $_POST['theme_accent'] ?? '#A58B75',
+        'theme_bg' => $_POST['theme_bg'] ?? '#FAF9F6',
+        'theme_text' => $_POST['theme_text'] ?? '#1F2421',
+
         'hero_video_type' => $_POST['hero_video_type'] ?? 'url',
         'hero_video_url' => $_POST['hero_video_url'] ?? '',
         'hero_video_upload' => $_POST['hero_video_upload'] ?? '',
@@ -56,6 +63,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'notify_client' => isset($_POST['notify_client']) ? '1' : '0'    ];
     
     // Check for file upload
+    if (isset($_FILES['site_logo']) && $_FILES['site_logo']['error'] === UPLOAD_ERR_OK) {
+        $tmpName = $_FILES['site_logo']['tmp_name'];
+        $name = basename($_FILES['site_logo']['name']);
+        
+        $uploadDir = __DIR__ . '/../assets/uploads/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        
+        $safeName = time() . '_logo_' . preg_replace('/[^a-zA-Z0-9.-]/', '_', $name);
+        $destPath = $uploadDir . $safeName;
+        
+        if (move_uploaded_file($tmpName, $destPath)) {
+            $updates['site_logo'] = 'assets/uploads/' . $safeName;
+        }
+    }
+
     if (isset($_FILES['video_upload_file']) && $_FILES['video_upload_file']['error'] === UPLOAD_ERR_OK) {
         $tmpName = $_FILES['video_upload_file']['tmp_name'];
         $name = basename($_FILES['video_upload_file']['name']);
@@ -495,6 +517,49 @@ foreach ($settingsRaw as $row) {
             updatePreview();
         });
         
+        
+        // Theme Color Preview Logic
+        const colorPrimary = document.getElementById('color_primary');
+        const colorSecondary = document.getElementById('color_secondary');
+        const colorAccent = document.getElementById('color_accent');
+        const colorBg = document.getElementById('color_bg');
+        const colorText = document.getElementById('color_text');
+
+        const pBox = document.getElementById('theme_preview_box');
+        const pNav = document.getElementById('preview_nav');
+        const pLogo = document.getElementById('preview_logo');
+        const pTag = document.getElementById('preview_tag');
+        const pHeading = document.getElementById('preview_heading');
+        const pText = document.getElementById('preview_text');
+        const pBtn = document.getElementById('preview_button');
+
+        function updateThemePreview() {
+            if(!pBox) return;
+            const bg = colorBg.value;
+            const text = colorText.value;
+            const accent = colorAccent.value;
+            const secondary = colorSecondary.value;
+            
+            pBox.style.backgroundColor = bg;
+            pNav.style.borderColor = accent + '40'; // 25% opacity border
+            
+            pLogo.style.color = secondary;
+            pNav.style.color = text;
+            
+            pTag.style.color = accent;
+            pHeading.style.color = secondary;
+            pText.style.color = text;
+            
+            pBtn.style.backgroundColor = accent;
+        }
+
+        if(colorPrimary) {
+            [colorPrimary, colorSecondary, colorAccent, colorBg, colorText].forEach(el => {
+                el.addEventListener('input', updateThemePreview);
+            });
+            updateThemePreview();
+        }
+
         // Init
         toggleVideoGroups();
         toggleFounderUpload();
