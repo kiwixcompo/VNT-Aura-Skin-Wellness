@@ -11,22 +11,21 @@ $vidEnd = get_setting($pdo, 'hero_video_end', '');
 $vidX = get_setting($pdo, 'hero_video_pos_x', '50');
 $vidY = get_setting($pdo, 'hero_video_pos_y', '50');
 
-// Fetch treatments
-$stmt = $pdo->query('SELECT * FROM treatments ORDER BY display_order ASC, id ASC');
-$treatments = $stmt->fetchAll();
+function safe_fetch_all($pdo, $query) {
+    try {
+        $stmt = $pdo->query($query);
+        return $stmt ? $stmt->fetchAll() : [];
+    } catch (PDOException $e) {
+        // Fallback for missing tables or columns on live server
+        return [];
+    }
+}
 
-// Fetch programmes
-$stmt = $pdo->query('SELECT * FROM programmes ORDER BY display_order ASC, id ASC');
-$programmes = $stmt->fetchAll();
-
-$stmt = $pdo->query("SELECT * FROM faqs ORDER BY display_order ASC, id ASC");
-$faqs = $stmt->fetchAll();
-
-$stmt = $pdo->query("SELECT * FROM testimonials ORDER BY display_order ASC, id ASC");
-$testimonials = $stmt->fetchAll();
-
-$stmt = $pdo->query("SELECT * FROM gallery ORDER BY display_order ASC, id ASC");
-$gallery_items = $stmt->fetchAll();
+$treatments = safe_fetch_all($pdo, 'SELECT * FROM treatments ORDER BY display_order ASC, id ASC');
+$programmes = safe_fetch_all($pdo, 'SELECT * FROM programmes ORDER BY display_order ASC, id ASC');
+$faqs = safe_fetch_all($pdo, 'SELECT * FROM faqs ORDER BY display_order ASC, id ASC');
+$testimonials = safe_fetch_all($pdo, 'SELECT * FROM testimonials ORDER BY display_order ASC, id ASC');
+$gallery_items = safe_fetch_all($pdo, 'SELECT * FROM gallery ORDER BY display_order ASC, id ASC');
 
 
 $videoSource = ($heroVideoType === 'upload' && !empty($heroVideoUpload)) ? $heroVideoUpload : $heroVideoUrl;
