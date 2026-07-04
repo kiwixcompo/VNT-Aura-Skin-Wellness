@@ -1,7 +1,30 @@
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-*.log
+
+# Dependencies
 node_modules/
 vendor/
+
+# Environment and Configuration
 .env
-includes/db.php
+.env.local
+.env.development
+.env.production
+
+# Logs
+*.log
+error_log.txt
+error.log
+
+# User Uploads
+/assets/uploads/*
+!/assets/uploads/.gitkeep
+
+# Temporary Scripts
+setup_email.php

@@ -26,43 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id']) && isse
         $stmt = $pdo->prepare('UPDATE bookings SET status = ? WHERE id = ?');
         $stmt->execute([$newStatus, $bookingId]);
         
-        // Fetch email settings
-        $smtp_username = get_setting($pdo, 'smtp_username', '');
-        $smtp_password = get_setting($pdo, 'smtp_password', '');
-        
-        if (!empty($smtp_username) && !empty($smtp_password)) {
-            require_once __DIR__ . '/../vendor/autoload.php';
-            $smtp_host = get_setting($pdo, 'smtp_host', 'smtp.gmail.com');
-            $smtp_port = get_setting($pdo, 'smtp_port', '587');
-            
-            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-            try {
-                $mail->isSMTP();
-                $mail->Host       = $smtp_host;
-                $mail->SMTPAuth   = true;
-                $mail->Username   = $smtp_username;
-                $mail->Password   = $smtp_password;
-                $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port       = $smtp_port;
-
-                $mail->setFrom($smtp_username, 'VNT Aura Skin & Wellness');
-                $mail->addAddress($booking['client_email']);
-
-                $mail->isHTML(true);
-                $mail->Subject = "Your Booking Status: " . ucfirst($newStatus);
-                $mail->Body    = "
-                    <h3>Hello " . htmlspecialchars($booking['client_name']) . ",</h3>
-                    <p>The status of your booking for <strong>" . htmlspecialchars($booking['service']) . "</strong> on " . htmlspecialchars($booking['preferred_date']) . " at " . htmlspecialchars($booking['preferred_time']) . " has been updated to: <strong style='text-transform: uppercase;'>" . htmlspecialchars($newStatus) . "</strong>.</p>
-                    <p>If you have any questions, please contact us.</p>
-                    <br>
-                    <p>Best regards,<br>VNT Aura Skin & Wellness</p>
-                ";
-                $mail->send();
-            } catch (Exception $e) {
-                // Log error or ignore
-                error_log("Failed to send status update email: " . $mail->ErrorInfo);
-            }
-        }
+        require_once __DIR__ . '/../includes/EmailHelper.php';
+        $emailHelper = new EmailHelper();
+        $emailHelper->sendStatusUpdateNotification($booking['client_email'], $booking, $newStatus);
     }
     
     header('Location: bookings.php?msg=updated');
