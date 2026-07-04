@@ -76,7 +76,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
 
         <div class="relative z-10 text-center px-6 max-w-4xl mx-auto flex flex-col items-center">
             <h1 class="text-4xl md:text-5xl lg:text-6xl text-white font-body font-light mb-10 tracking-wide reveal-up" style="opacity:0;">
-                A haven of opulence and rejuvenation.
+                Healthy skin begins with expert care.
             </h1>
             <div class="flex flex-col sm:flex-row gap-6 justify-center reveal-up" style="opacity:0; transition-delay: 0.2s;">
                 <a href="#" onclick="openBookingModal(); return false;" class="btn-luxury px-10 py-3 text-[15px] font-light">Book Now</a>

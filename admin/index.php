@@ -9,11 +9,11 @@ $msg = $_GET['msg'] ?? '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updates = [
         
-        'theme_primary' => $_POST['theme_primary'] ?? '#D1C5B4',
-        'theme_secondary' => $_POST['theme_secondary'] ?? '#2C362F',
-        'theme_accent' => $_POST['theme_accent'] ?? '#A58B75',
-        'theme_bg' => $_POST['theme_bg'] ?? '#FAF9F6',
-        'theme_text' => $_POST['theme_text'] ?? '#1F2421',
+        'theme_primary' => $_POST['theme_primary'] ?? '#FFFFFF',
+        'theme_secondary' => $_POST['theme_secondary'] ?? '#000000',
+        'theme_accent' => $_POST['theme_accent'] ?? '#333333',
+        'theme_bg' => $_POST['theme_bg'] ?? '#FFFFFF',
+        'theme_text' => $_POST['theme_text'] ?? '#000000',
 
         'hero_video_type' => $_POST['hero_video_type'] ?? 'url',
         'hero_video_url' => $_POST['hero_video_url'] ?? '',
@@ -82,6 +82,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $updates['site_logo'] = 'assets/uploads/' . $safeName;
         }
     }
+    // Handle favicon removal
+    if (isset($_POST['remove_favicon']) && $_POST['remove_favicon'] == '1') {
+        $updates['site_favicon'] = '';
+    }
+
+    // Check for favicon upload
+    if (isset($_FILES['site_favicon']) && $_FILES['site_favicon']['error'] === UPLOAD_ERR_OK) {
+        $tmpName = $_FILES['site_favicon']['tmp_name'];
+        $name = basename($_FILES['site_favicon']['name']);
+        
+        $uploadDir = __DIR__ . '/../assets/uploads/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        
+        $safeName = time() . '_favicon_' . preg_replace('/[^a-zA-Z0-9.-]/', '_', $name);
+        $destPath = $uploadDir . $safeName;
+        
+        if (move_uploaded_file($tmpName, $destPath)) {
+            $updates['site_favicon'] = 'assets/uploads/' . $safeName;
+        }
+    }
+
 
     if (isset($_FILES['video_upload_file']) && $_FILES['video_upload_file']['error'] === UPLOAD_ERR_OK) {
         $tmpName = $_FILES['video_upload_file']['tmp_name'];
@@ -191,12 +212,13 @@ $defaultSettings = [
     'smtp_username' => '',
     'smtp_password' => '',
     
-    'theme_primary' => '#D1C5B4',
-    'theme_secondary' => '#2C362F',
-    'theme_accent' => '#A58B75',
-    'theme_bg' => '#FAF9F6',
-    'theme_text' => '#1F2421',
-    'site_logo' => ''
+    'theme_primary' => '#FFFFFF',
+    'theme_secondary' => '#000000',
+    'theme_accent' => '#333333',
+    'theme_bg' => '#FFFFFF',
+    'theme_text' => '#000000',
+    'site_logo' => '',
+    'site_favicon' => ''
 ];
 
 $stmt = $pdo->query('SELECT setting_key, setting_value FROM settings');
@@ -259,7 +281,7 @@ $settings = array_merge($defaultSettings, $dbSettings);
                 
                 <div class="mb-6">
                     <label class="block text-gray-700 font-medium mb-1">Site Logo</label>
-                    <p class="text-xs text-gray-500 mb-2">Upload a logo to replace the text "VNT AURA" in the navigation and update the browser favicon.</p>
+                    <p class="text-xs text-gray-500 mb-2">Upload a logo to replace the text "VNT AURA" in the navigation.</p>
                     <div class="flex items-center space-x-4">
                         <?php if(!empty($settings['site_logo'])): ?>
                             <img src="../<?= htmlspecialchars($settings['site_logo']) ?>" class="h-12 bg-gray-100 p-2 rounded" alt="Current Logo">
@@ -268,28 +290,51 @@ $settings = array_merge($defaultSettings, $dbSettings);
                     </div>
                 </div>
 
+                <div class="mb-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    <label class="flex items-center cursor-pointer mb-2">
+                        <input type="checkbox" id="use_custom_favicon" class="w-5 h-5 text-blue-600 rounded mr-3" onchange="document.getElementById('favicon_upload_section').classList.toggle('hidden', !this.checked)" <?= !empty($settings['site_favicon']) ? 'checked' : '' ?>>
+                        <span class="text-gray-800 font-medium">Use a different image for the Favicon</span>
+                    </label>
+                    
+                    <div id="favicon_upload_section" class="mt-4 pl-8 border-l-2 border-blue-200 <?= empty($settings['site_favicon']) ? 'hidden' : '' ?>">
+                        <p class="text-xs text-gray-500 mb-3">Upload a square image (e.g. 512x512) for the browser tab icon. If left unchecked, the Site Logo will be used.</p>
+                        <div class="flex items-center space-x-4">
+                            <?php if(!empty($settings['site_favicon'])): ?>
+                                <img src="../<?= htmlspecialchars($settings['site_favicon']) ?>" class="h-10 w-10 bg-white shadow-sm p-1 rounded" alt="Current Favicon">
+                            <?php endif; ?>
+                            <input type="file" name="site_favicon" accept="image/*" class="w-full px-4 py-2 border rounded text-sm bg-white">
+                        </div>
+                        <?php if(!empty($settings['site_favicon'])): ?>
+                            <label class="flex items-center mt-3 text-red-600 text-sm cursor-pointer hover:text-red-800 transition-colors">
+                                <input type="checkbox" name="remove_favicon" value="1" class="mr-2 rounded">
+                                <i class="fas fa-trash-alt mr-1"></i> Remove custom favicon
+                            </label>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
                 <h4 class="font-medium text-gray-800 mb-2 border-b pb-1">Theme Colors</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
                             <label class="text-sm font-medium text-gray-700">Primary Color</label>
-                            <input type="color" name="theme_primary" id="color_primary" value="<?= htmlspecialchars($settings['theme_primary'] ?? '#D1C5B4') ?>" class="h-8 w-14 cursor-pointer">
+                            <input type="color" name="theme_primary" id="color_primary" value="<?= htmlspecialchars($settings['theme_primary'] ?? '#FFFFFF') ?>" class="h-8 w-14 cursor-pointer">
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="text-sm font-medium text-gray-700">Secondary (Headings)</label>
-                            <input type="color" name="theme_secondary" id="color_secondary" value="<?= htmlspecialchars($settings['theme_secondary'] ?? '#2C362F') ?>" class="h-8 w-14 cursor-pointer">
+                            <input type="color" name="theme_secondary" id="color_secondary" value="<?= htmlspecialchars($settings['theme_secondary'] ?? '#000000') ?>" class="h-8 w-14 cursor-pointer">
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="text-sm font-medium text-gray-700">Accent (Buttons)</label>
-                            <input type="color" name="theme_accent" id="color_accent" value="<?= htmlspecialchars($settings['theme_accent'] ?? '#A58B75') ?>" class="h-8 w-14 cursor-pointer">
+                            <input type="color" name="theme_accent" id="color_accent" value="<?= htmlspecialchars($settings['theme_accent'] ?? '#333333') ?>" class="h-8 w-14 cursor-pointer">
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="text-sm font-medium text-gray-700">Background</label>
-                            <input type="color" name="theme_bg" id="color_bg" value="<?= htmlspecialchars($settings['theme_bg'] ?? '#FAF9F6') ?>" class="h-8 w-14 cursor-pointer">
+                            <input type="color" name="theme_bg" id="color_bg" value="<?= htmlspecialchars($settings['theme_bg'] ?? '#FFFFFF') ?>" class="h-8 w-14 cursor-pointer">
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="text-sm font-medium text-gray-700">Text Color</label>
-                            <input type="color" name="theme_text" id="color_text" value="<?= htmlspecialchars($settings['theme_text'] ?? '#1F2421') ?>" class="h-8 w-14 cursor-pointer">
+                            <input type="color" name="theme_text" id="color_text" value="<?= htmlspecialchars($settings['theme_text'] ?? '#000000') ?>" class="h-8 w-14 cursor-pointer">
                         </div>
                     </div>
                     

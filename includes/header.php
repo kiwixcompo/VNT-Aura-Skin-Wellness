@@ -5,13 +5,14 @@ $seoTitle = get_setting($pdo, 'seo_title', 'VNT Aura Skin & Wellness');
 $seoDesc = get_setting($pdo, 'seo_description', 'Personalised skin consultations and evidence-based skin treatments.');
 $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-skin-wellness');
 
-        $themePrimary = get_setting($pdo, 'theme_primary', '#D1C5B4');
-        $themeSecondary = get_setting($pdo, 'theme_secondary', '#2C362F');
-        $themeAccent = get_setting($pdo, 'theme_accent', '#A58B75');
-        $themeBg = get_setting($pdo, 'theme_bg', '#FAF9F6');
-        $themeText = get_setting($pdo, 'theme_text', '#1F2421');
+        $themePrimary = get_setting($pdo, 'theme_primary', '#FFFFFF');
+        $themeSecondary = get_setting($pdo, 'theme_secondary', '#000000');
+        $themeAccent = get_setting($pdo, 'theme_accent', '#333333');
+        $themeBg = get_setting($pdo, 'theme_bg', '#FFFFFF');
+        $themeText = get_setting($pdo, 'theme_text', '#000000');
         
         $siteLogo = get_setting($pdo, 'site_logo', '');
+        $siteFavicon = get_setting($pdo, 'site_favicon', '');
 
 ?>
 <!DOCTYPE html>
@@ -21,7 +22,9 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($seoTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($seoDesc) ?>">
-        <?php if (!empty($siteLogo)): ?>
+        <?php if (!empty($siteFavicon)): ?>
+        <link rel="icon" href="<?= htmlspecialchars($siteFavicon) ?>" type="image/png">
+    <?php elseif (!empty($siteLogo)): ?>
         <link rel="icon" href="<?= htmlspecialchars($siteLogo) ?>" type="image/png">
     <?php else: ?>
         <link rel="icon" href="assets/images/favicon.png" type="image/png">
@@ -107,44 +110,44 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
 <body class="bg-bg text-text antialiased">
 
 <!-- Navigation -->
-<header class="fixed w-full top-0 z-50 sylk-nav transition-all duration-300 border-b border-white/20 <?= htmlspecialchars($navClass ?? '') ?>">
+<header class="fixed w-full top-0 z-50 sylk-nav transition-all duration-300 border-b border-black/5 <?= htmlspecialchars($navClass ?? '') ?>">
     <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
         <!-- Logo -->
         <a href="index.php" class="w-32 md:w-40 flex items-center">
             <?php if (!empty($siteLogo)): ?>
                 <img src="<?= htmlspecialchars($siteLogo) ?>" alt="VNT Aura Logo" class="w-full h-auto object-contain">
             <?php else: ?>
-                <span class="font-heading text-3xl text-white tracking-widest leading-none">VNT AURA</span>
+                <span class="font-heading text-3xl text-text tracking-widest leading-none">VNT AURA</span>
             <?php endif; ?>
         </a>
         
         <!-- Desktop Menu -->
         <nav class="hidden md:flex space-x-10 items-center">
-            <a href="#home" class="text-white hover:text-gray-300 transition-colors font-light text-[15px]">Home</a>
-            <a href="#treatments" class="text-white hover:text-gray-300 transition-colors font-light text-[15px]">Treatments</a>
-            <a href="#programmes" class="text-white hover:text-gray-300 transition-colors font-light text-[15px]">Programmes</a>
-            <a href="#founder" class="text-white hover:text-gray-300 transition-colors font-light text-[15px]">Meet Valerie</a>
-            <a href="#contact" class="text-white hover:text-gray-300 transition-colors font-light text-[15px]">Contact</a>
+            <a href="#home" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Home</a>
+            <a href="#treatments" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Treatments</a>
+            <a href="#programmes" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Programmes</a>
+            <a href="#founder" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Meet Valerie</a>
+            <a href="#contact" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Contact</a>
         </nav>
 
         <!-- Right Icons -->
         <div class="hidden md:flex items-center space-x-6">
-            <a href="admin/login.php" class="text-white hover:text-gray-300 transition-colors text-lg" title="Admin Login"><i class="fa-regular fa-user"></i></a>
-            <a href="#" onclick="openBookingModal(); return false;" class="text-white hover:text-gray-300 transition-colors text-lg" title="Book Appointment"><i class="fa-regular fa-calendar-check"></i></a>
+            <a href="admin/login.php" class="text-text hover:opacity-70 transition-colors text-lg" title="Admin Login"><i class="fa-regular fa-user"></i></a>
+            <a href="#" onclick="openBookingModal(); return false;" class="text-text hover:opacity-70 transition-colors text-lg" title="Book Appointment"><i class="fa-regular fa-calendar-check"></i></a>
         </div>
         
         <!-- Mobile Menu Toggle -->
-        <button id="mobile-menu-btn" class="md:hidden text-2xl text-white">
+        <button id="mobile-menu-btn" class="md:hidden text-2xl text-text">
             <i class="fas fa-bars"></i>
         </button>
     </div>
     
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-secondary/95 backdrop-blur-md shadow-xl flex-col items-center py-8 space-y-6">
-        <a href="#home" class="text-lg text-white font-light">Home</a>
-        <a href="#treatments" class="text-lg text-white font-light">Treatments</a>
-        <a href="#programmes" class="text-lg text-white font-light">Programmes</a>
-        <a href="#founder" class="text-lg text-white font-light">Meet Valerie</a>
-        <a href="#contact" class="text-lg text-white font-light">Contact</a>
+    <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-bg/95 backdrop-blur-md shadow-xl flex-col items-center py-8 space-y-6">
+        <a href="#home" class="text-lg text-text font-light">Home</a>
+        <a href="#treatments" class="text-lg text-text font-light">Treatments</a>
+        <a href="#programmes" class="text-lg text-text font-light">Programmes</a>
+        <a href="#founder" class="text-lg text-text font-light">Meet Valerie</a>
+        <a href="#contact" class="text-lg text-text font-light">Contact</a>
     </div>
 </header>
