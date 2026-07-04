@@ -13,12 +13,13 @@ class EmailHelper
 
     private function setupMailer(): void
     {
-        // Check if PHPMailer is available
+        // Load PHPMailer manually without Composer
         if (!class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
-            // Attempt to load from vendor if not already loaded
-            $autoloadPath = __DIR__ . '/../vendor/autoload.php';
-            if (file_exists($autoloadPath)) {
-                require_once $autoloadPath;
+            $phpMailerDir = __DIR__ . '/PHPMailer/';
+            if (file_exists($phpMailerDir . 'Exception.php')) {
+                require_once $phpMailerDir . 'Exception.php';
+                require_once $phpMailerDir . 'PHPMailer.php';
+                require_once $phpMailerDir . 'SMTP.php';
             }
         }
 
@@ -220,7 +221,7 @@ class EmailHelper
                 error_log("✗ mail() function: Email sending failed to: $to");
             }
             
-            return $result;
+            return (bool) $result;
             
         } catch (\Exception $e) {
             error_log("Email exception: " . $e->getMessage());
