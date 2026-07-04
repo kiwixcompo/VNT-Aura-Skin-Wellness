@@ -107,7 +107,7 @@ $treatments = $stmt->fetchAll();
                         <h3 class="text-xl font-bold mb-2"><?= htmlspecialchars($t['title']) ?></h3>
                         <p class="text-sm text-gray-600 line-clamp-2 mb-4"><?= htmlspecialchars($t['short_desc']) ?></p>
                         <div class="flex justify-end space-x-2 mt-auto">
-                            <button onclick='editModal(<?= json_encode($t) ?>)' class="text-blue-600 hover:bg-blue-50 px-3 py-1 rounded text-sm"><i class="fas fa-edit"></i> Edit</button>
+                            <button onclick='editModal(<?= htmlspecialchars(json_encode($t), ENT_QUOTES, \'UTF-8\') ?>)' class="text-blue-600 hover:bg-blue-50 px-3 py-1 rounded text-sm"><i class="fas fa-edit"></i> Edit</button>
                             <form method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this?');">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?= $t['id'] ?>">

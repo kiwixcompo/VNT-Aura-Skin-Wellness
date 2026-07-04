@@ -91,7 +91,7 @@ $items = $stmt->fetchAll();
                     <tr class="border-b border-gray-100 hover:bg-gray-50">
                         <td class="p-4 font-medium"><?= htmlspecialchars($item["client_name"]) ?></td><td class="p-4"><?= $item["rating"] ?>/5</td>
                         <td class="p-4">
-                            <button onclick='editModal(<?= json_encode($item) ?>)' class="text-blue-600 hover:underline mr-3">Edit</button>
+                            <button onclick='editModal(<?= htmlspecialchars(json_encode($item), ENT_QUOTES, \'UTF-8\') ?>)' class="text-blue-600 hover:underline mr-3">Edit</button>
                             <form method="POST" class="inline" onsubmit="return confirm('Are you sure?');">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?= $item['id'] ?>">
