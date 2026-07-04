@@ -12,6 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_booking_id']))
     exit;
 }
 
+
+// Handle bulk deletion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_delete']) && isset($_POST['booking_ids']) && is_array($_POST['booking_ids'])) {
+    $ids = array_map('intval', $_POST['booking_ids']);
+    if (count($ids) > 0) {
+        $placeholders = str_repeat('?,', count($ids) - 1) . '?';
+        $stmt = $pdo->prepare("DELETE FROM bookings WHERE id IN ($placeholders)");
+        $stmt->execute($ids);
+        header('Location: bookings.php?msg=bulk_deleted');
+        exit;
+    }
+}
+
 // Handle status updates
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id']) && isset($_POST['status'])) {
     $bookingId = $_POST['booking_id'];
@@ -72,12 +85,21 @@ $bookings = $stmt->fetchAll();
         
         <?php if (isset($_GET['msg']) && $_GET['msg'] === 'updated'): ?>
             <div class="bg-green-100 text-green-800 p-4 rounded mb-6 font-medium">Booking status updated successfully.</div>
+        <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'bulk_deleted'): ?>
+            <div class="bg-green-100 text-green-800 p-4 rounded mb-6 font-medium">Selected bookings deleted successfully.</div>
         <?php endif; ?>
 
+        <form method="POST" id="bulkDeleteForm">
+        <div class="mb-4">
+            <button type="submit" name="bulk_delete" value="1" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors text-sm font-medium" onclick="return confirm('Are you sure you want to delete all selected bookings? This action cannot be undone.');">
+                <i class="fas fa-trash-alt mr-2"></i>Delete Selected
+            </button>
+        </div>
         <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-50 border-b">
+                        <th class="p-4 font-medium text-gray-600 w-12 text-center"><input type="checkbox" onclick="toggleSelectAll(this)" class="rounded border-gray-300"></th>
                         <th class="p-4 font-medium text-gray-600">Client Info</th>
                         <th class="p-4 font-medium text-gray-600">Service & Date</th>
                         <th class="p-4 font-medium text-gray-600">Notes</th>
@@ -87,10 +109,13 @@ $bookings = $stmt->fetchAll();
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     <?php if (count($bookings) === 0): ?>
-                        <tr><td colspan="5" class="p-8 text-center text-gray-500">No booking requests yet.</td></tr>
+                        <tr><td colspan="6" class="p-8 text-center text-gray-500">No booking requests yet.</td></tr>
                     <?php else: ?>
                         <?php foreach ($bookings as $b): ?>
                             <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 align-top text-center">
+                                    <input type="checkbox" name="booking_ids[]" value="<?= $b['id'] ?>" class="rounded border-gray-300">
+                                </td>
                                 <td class="p-4 align-top">
                                     <div class="font-medium text-gray-900"><?= htmlspecialchars($b['client_name']) ?></div>
                                     <div class="text-sm text-gray-500"><?= htmlspecialchars($b['client_email']) ?></div>
@@ -127,6 +152,16 @@ $bookings = $stmt->fetchAll();
                 </tbody>
             </table>
         </div>
+        </form>
     </div>
+    
+    <script>
+    function toggleSelectAll(source) {
+        checkboxes = document.getElementsByName('booking_ids[]');
+        for(var i=0, n=checkboxes.length;i<n;i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+    </script>
 </body>
 </html>

@@ -28,3 +28,5 @@ error.log
 
 # Temporary Scripts
 setup_email.php
+
+includes/db.php
