@@ -253,6 +253,65 @@ $settings = array_merge($defaultSettings, $dbSettings);
 
         <form method="post" action="index.php" enctype="multipart/form-data" class="space-y-8 max-w-4xl">
             
+            <!-- Branding & Theme -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-8 border-l-4 border-l-purple-500">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Branding & Theme Colors</h3>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-medium mb-1">Site Logo</label>
+                    <p class="text-xs text-gray-500 mb-2">Upload a logo to replace the text "VNT AURA" in the navigation and update the browser favicon.</p>
+                    <div class="flex items-center space-x-4">
+                        <?php if(!empty($settings['site_logo'])): ?>
+                            <img src="../<?= htmlspecialchars($settings['site_logo']) ?>" class="h-12 bg-gray-100 p-2 rounded" alt="Current Logo">
+                        <?php endif; ?>
+                        <input type="file" name="site_logo" accept="image/*" class="w-full px-4 py-2 border rounded">
+                    </div>
+                </div>
+
+                <h4 class="font-medium text-gray-800 mb-2 border-b pb-1">Theme Colors</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Primary Color</label>
+                            <input type="color" name="theme_primary" id="color_primary" value="<?= htmlspecialchars($settings['theme_primary'] ?? '#D1C5B4') ?>" class="h-8 w-14 cursor-pointer">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Secondary (Headings)</label>
+                            <input type="color" name="theme_secondary" id="color_secondary" value="<?= htmlspecialchars($settings['theme_secondary'] ?? '#2C362F') ?>" class="h-8 w-14 cursor-pointer">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Accent (Buttons)</label>
+                            <input type="color" name="theme_accent" id="color_accent" value="<?= htmlspecialchars($settings['theme_accent'] ?? '#A58B75') ?>" class="h-8 w-14 cursor-pointer">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Background</label>
+                            <input type="color" name="theme_bg" id="color_bg" value="<?= htmlspecialchars($settings['theme_bg'] ?? '#FAF9F6') ?>" class="h-8 w-14 cursor-pointer">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Text Color</label>
+                            <input type="color" name="theme_text" id="color_text" value="<?= htmlspecialchars($settings['theme_text'] ?? '#1F2421') ?>" class="h-8 w-14 cursor-pointer">
+                        </div>
+                    </div>
+                    
+                    <!-- Live Preview Box -->
+                    <div class="border rounded-xl overflow-hidden shadow-sm" id="theme_preview_box">
+                        <div id="preview_nav" class="px-4 py-3 border-b flex justify-between items-center transition-colors">
+                            <div id="preview_logo" class="font-serif tracking-widest transition-colors">VNT AURA</div>
+                            <div class="text-xs space-x-2 transition-colors">
+                                <span>Home</span>
+                                <span>Contact</span>
+                            </div>
+                        </div>
+                        <div id="preview_body" class="p-6 transition-colors h-full">
+                            <span id="preview_tag" class="uppercase tracking-widest text-xs font-semibold block mb-2 transition-colors">Experience</span>
+                            <h2 id="preview_heading" class="text-2xl font-serif mb-3 transition-colors">Sample Heading</h2>
+                            <p id="preview_text" class="text-sm opacity-80 mb-4 transition-colors">This is how your text will look against the background color. Make sure there is enough contrast to read it clearly.</p>
+                            <button id="preview_button" type="button" class="px-4 py-2 text-white text-xs uppercase tracking-widest transition-colors">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Hero Section Settings -->
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <h3 class="text-xl font-medium mb-4 pb-2 border-b">Hero Video Settings</h3>
@@ -464,6 +523,13 @@ $settings = array_merge($defaultSettings, $dbSettings);
                             <label class="block text-gray-700 font-medium mb-1 text-sm">App Password</label>
                             <input type="password" name="smtp_password" value="<?= htmlspecialchars($settings['smtp_password'] ?? '') ?>" class="w-full px-4 py-2 border rounded text-sm" placeholder="16-character App Password">
                         </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t flex items-center justify-between">
+                        <p class="text-sm text-gray-500">Need to troubleshoot your email configuration?</p>
+                        <a href="../api/test_email.php" target="_blank" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded font-medium transition-colors">
+                            <i class="fas fa-paper-plane mr-2"></i>Test SMTP Settings
+                        </a>
                     </div>
                 </div>
             </div>
