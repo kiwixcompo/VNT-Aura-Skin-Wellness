@@ -27,6 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'founder_image_upload' => $_POST['founder_image_upload'] ?? '',
         'founder_pos_x' => $_POST['founder_pos_x'] ?? '50',
         'founder_pos_y' => $_POST['founder_pos_y'] ?? '50',
+        'consultation_image_type' => $_POST['consultation_image_type'] ?? 'url',
+        'consultation_image_url' => $_POST['consultation_image_url'] ?? '',
+        'consultation_image_upload' => $_POST['consultation_image_upload'] ?? '',
+        'paypal_email' => $_POST['paypal_email'] ?? '',
         'seo_title' => $_POST['seo_title'] ?? '',
         'seo_description' => $_POST['seo_description'] ?? '',
         
@@ -36,9 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'consultation_price' => $_POST['consultation_price'] ?? '',
         'consultation_note' => $_POST['consultation_note'] ?? '',
         'consultation_bullets' => $_POST['consultation_bullets'] ?? '',
-        'journeys_title' => $_POST['journeys_title'] ?? '',
-        'journeys_subtitle' => $_POST['journeys_subtitle'] ?? '',
-        'journeys_text' => $_POST['journeys_text'] ?? '',
+        'packages_title' => $_POST['packages_title'] ?? '',
+        'packages_subtitle' => $_POST['packages_subtitle'] ?? '',
+        'packages_text' => $_POST['packages_text'] ?? '',
         'therapies_title' => $_POST['therapies_title'] ?? '',
         'therapies_subtitle' => $_POST['therapies_subtitle'] ?? '',
         'therapies_text' => $_POST['therapies_text'] ?? '',
@@ -139,6 +143,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif (isset($_FILES['founder_upload_file']) && $_FILES['founder_upload_file']['error'] !== UPLOAD_ERR_NO_FILE) {
         $msg = 'upload_error_' . $_FILES['founder_upload_file']['error'];
+    }    
+    // Check for consultation image upload
+    if (isset($_FILES['consultation_upload_file']) && $_FILES['consultation_upload_file']['error'] === UPLOAD_ERR_OK) {
+        $tmpName = $_FILES['consultation_upload_file']['tmp_name'];
+        $name = basename($_FILES['consultation_upload_file']['name']);
+        
+        $uploadDir = __DIR__ . '/../assets/images/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        
+        $safeName = 'consultation_uploaded_' . time() . '_' . preg_replace('/[^a-zA-Z0-9.-]/', '_', $name);
+        $destPath = $uploadDir . $safeName;
+        
+        if (move_uploaded_file($tmpName, $destPath)) {
+            $updates['consultation_image_upload'] = 'assets/images/' . $safeName;
+        }
+    } elseif (isset($_FILES['consultation_upload_file']) && $_FILES['consultation_upload_file']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $msg = 'upload_error_' . $_FILES['consultation_upload_file']['error'];
     }
     
     $stmt = $pdo->prepare('INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?');
@@ -177,9 +198,9 @@ $defaultSettings = [
     'consultation_note' => '(Redeemable against treatment booked on the day)',
     'consultation_bullets' => '',
     
-    'journeys_title' => 'Our Skin Journeys',
-    'journeys_subtitle' => 'Curated Experiences',
-    'journeys_text' => "We don't just perform treatments; we deliver results. Our skin journeys combine multiple modalities over a set period to fundamentally transform your skin.",
+    'packages_title' => 'Our Skin Journeys',
+    'packages_subtitle' => 'Curated Experiences',
+    'packages_text' => "We don't just perform treatments; we deliver results. Our skin journeys combine multiple modalities over a set period to fundamentally transform your skin.",
     
     'therapies_title' => 'Advanced Skin Therapies',
     'therapies_subtitle' => 'Clinical Excellence',
@@ -475,6 +496,28 @@ $settings = array_merge($defaultSettings, $dbSettings);
             <!-- CMS Content Sections -->
             <div class="bg-white p-6 rounded-xl shadow-sm border mb-8">
                 <h3 class="text-xl font-semibold mb-4 border-b pb-2">Consultation Section</h3>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Image Source Type</label>
+                    <select name="consultation_image_type" id="consultation_image_type" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="toggleConsultationUpload()">
+                        <option value="url" <?= ($settings['consultation_image_type'] ?? '') === 'url' ? 'selected' : '' ?>>Direct URL</option>
+                        <option value="upload" <?= ($settings['consultation_image_type'] ?? '') === 'upload' ? 'selected' : '' ?>>Direct Upload</option>
+                    </select>
+                </div>
+                
+                <div id="consultation_url_group" class="mb-4 <?= ($settings['consultation_image_type'] ?? '') === 'upload' ? 'hidden' : '' ?>">
+                    <label class="block text-gray-700 font-medium mb-2">Image URL</label>
+                    <input type="text" name="consultation_image_url" value="<?= htmlspecialchars($settings['consultation_image_url'] ?? '') ?>" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://images.unsplash.com/...">
+                </div>
+                
+                <div id="consultation_upload_group" class="mb-4 <?= ($settings['consultation_image_type'] ?? '') === 'url' ? 'hidden' : '' ?>">
+                    <label class="block text-gray-700 font-medium mb-2">Upload Image</label>
+                    <?php if(!empty($settings['consultation_image_upload'])): ?>
+                        <div class="text-sm text-green-600 mb-2">Current file: <?= htmlspecialchars(basename($settings['consultation_image_upload'])) ?></div>
+                    <?php endif; ?>
+                    <input type="file" name="consultation_upload_file" accept="image/*" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="hidden" name="consultation_image_upload" value="<?= htmlspecialchars($settings['consultation_image_upload'] ?? '') ?>">
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div><label class="block text-gray-700 font-medium mb-1">Title</label><input type="text" name="consultation_title" value="<?= htmlspecialchars($settings['consultation_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
                     <div><label class="block text-gray-700 font-medium mb-1">Subtitle</label><input type="text" name="consultation_subtitle" value="<?= htmlspecialchars($settings['consultation_subtitle'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
@@ -486,11 +529,11 @@ $settings = array_merge($defaultSettings, $dbSettings);
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-sm border mb-8">
-                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Skin Journeys & Therapies Titles</h3>
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Packages & Therapies Titles</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><label class="block text-gray-700 font-medium mb-1">Journeys Title</label><input type="text" name="journeys_title" value="<?= htmlspecialchars($settings['journeys_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
-                    <div><label class="block text-gray-700 font-medium mb-1">Journeys Subtitle</label><input type="text" name="journeys_subtitle" value="<?= htmlspecialchars($settings['journeys_subtitle'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
-                    <div class="md:col-span-2"><label class="block text-gray-700 font-medium mb-1">Journeys Text</label><textarea name="journeys_text" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['journeys_text'] ?? '') ?></textarea></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Packages Title</label><input type="text" name="journeys_title" value="<?= htmlspecialchars($settings['packages_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div><label class="block text-gray-700 font-medium mb-1">Packages Subtitle</label><input type="text" name="journeys_subtitle" value="<?= htmlspecialchars($settings['packages_subtitle'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
+                    <div class="md:col-span-2"><label class="block text-gray-700 font-medium mb-1">Packages Text</label><textarea name="journeys_text" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['packages_text'] ?? '') ?></textarea></div>
                     
                     <div><label class="block text-gray-700 font-medium mb-1">Therapies Title</label><input type="text" name="therapies_title" value="<?= htmlspecialchars($settings['therapies_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
                     <div><label class="block text-gray-700 font-medium mb-1">Therapies Subtitle</label><input type="text" name="therapies_subtitle" value="<?= htmlspecialchars($settings['therapies_subtitle'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
@@ -539,6 +582,8 @@ $settings = array_merge($defaultSettings, $dbSettings);
                 <p class="text-gray-500 text-sm mb-4">Configure email alerts for new bookings. The system will use standard PHP mail(), which requires a functioning local SMTP (like MailHog) or a live server environment to actually send emails.</p>
                 <div class="grid grid-cols-1 gap-4">
                     <div><label class="block text-gray-700 font-medium mb-1">Admin Alert Email</label><input type="email" name="admin_email" value="<?= htmlspecialchars($settings['admin_email'] ?? '') ?>" class="w-full px-4 py-2 border rounded" placeholder="Where should new booking alerts go?"></div>
+                    <div class="mt-4"><label class="block text-gray-700 font-medium mb-1">PayPal Email</label>
+                    <input type="email" name="paypal_email" value="<?= htmlspecialchars($settings['paypal_email'] ?? '') ?>" class="w-full px-4 py-2 border rounded" placeholder="PayPal Email Address"></div>
                     <div class="flex items-center">
                         <input type="checkbox" id="notify_admin" name="notify_admin" value="1" <?= ($settings['notify_admin'] ?? '1') == '1' ? 'checked' : '' ?> class="w-5 h-5 text-blue-600 rounded">
                         <label for="notify_admin" class="ml-2 text-gray-700 font-medium">Send Email to Admin on New Booking</label>

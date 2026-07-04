@@ -48,11 +48,41 @@ try {
         $emailHelper->sendAdminBookingNotification($admin_email, $bookingData);
     }
     
+
     if ($notify_client && !empty($email)) {
         $emailHelper->sendClientBookingConfirmation($email, $bookingData);
     }
+    
+    $payment_method = $_POST['payment_method'] ?? 'later';
+    if ($payment_method === 'paypal') {
+        $price = 0;
+        if ($service === 'Initial Consultation' || $service === 'Skin Consultation') {
+            $price_str = get_setting($pdo, 'consultation_price', '20');
+            $price = (float) preg_replace('/[^0-9.]/', '', $price_str);
+        } else {
+            $stmt2 = $pdo->prepare("SELECT price FROM treatments WHERE title = ?");
+            $stmt2->execute([$service]);
+            if ($t = $stmt2->fetch()) {
+                $price = (float) $t['price'];
+            } else {
+                $stmt3 = $pdo->prepare("SELECT price FROM programmes WHERE title = ?");
+                $stmt3->execute([$service]);
+                if ($p = $stmt3->fetch()) {
+                    $price = (float) $p['price'];
+                }
+            }
+        }
+        
+        if ($price > 0) {
+            $paypal_email = get_setting($pdo, 'paypal_email', 'vntauraskinandwellness@gmail.com');
+            $paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=" . urlencode($paypal_email) . "&amount=" . number_format($price, 2, '.', '') . "&currency_code=USD&item_name=" . urlencode($service);
+            echo json_encode(['success' => true, 'redirect' => $paypal_url, 'message' => 'Redirecting to PayPal...']);
+            exit;
+        }
+    }
 
     echo json_encode(['success' => true, 'message' => 'Your booking request has been received. We will contact you shortly to confirm.']);
+
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);

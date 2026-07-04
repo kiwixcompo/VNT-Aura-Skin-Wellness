@@ -54,6 +54,19 @@
                     <textarea name="notes" rows="2" class="w-full bg-white border border-gray-200 px-4 py-3 focus:outline-none focus:border-accent font-light" placeholder="E.g., breakouts, aging, redness..."></textarea>
                 </div>
                 
+                                <div>
+                    <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Payment Method</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="payment_method" value="later" checked class="accent-secondary">
+                            <span class="text-sm text-gray-700">Pay Later (In Clinic)</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="payment_method" value="paypal" class="accent-secondary">
+                            <span class="text-sm text-gray-700">Pay Now (PayPal)</span>
+                        </label>
+                    </div>
+                </div>
                 <div id="bookingMsg" class="hidden p-3 rounded text-sm text-center"></div>
                 
                 <button type="submit" id="bookingSubmit" class="w-full bg-secondary text-white uppercase tracking-widest text-sm py-4 hover:bg-opacity-90 transition-colors mt-2">Submit Request</button>
@@ -94,7 +107,7 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
         body: formData
     })
     .then(response => response.json())
-    .then(data => {
+        .then(data => {
         msg.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
         if (data.error) {
             msg.textContent = data.error;
@@ -102,15 +115,18 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
             btn.textContent = 'Submit Request';
             btn.disabled = false;
         } else {
-            msg.textContent = data.message;
-            msg.classList.add('bg-green-100', 'text-green-700');
-            this.reset();
-            setTimeout(() => {
-                closeBookingModal();
-                msg.classList.add('hidden');
+            if (data.redirect) {
+                msg.textContent = data.message;
+                msg.classList.add('bg-green-100', 'text-green-700');
+                window.location.href = data.redirect;
+            } else {
+                msg.textContent = data.message;
+                msg.classList.add('bg-green-100', 'text-green-700');
+                document.getElementById('bookingForm').reset();
                 btn.textContent = 'Submit Request';
                 btn.disabled = false;
-            }, 3000);
+                setTimeout(closeBookingModal, 3000);
+            }
         }
     })
     .catch(error => {

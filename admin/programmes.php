@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $id = $_POST['id'] ?? '';
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
+    $price = $_POST['price'] ?? 0;
     $image_url = $_POST['image_url'] ?? '';
     $display_order = $_POST['display_order'] ?? 0;
     
@@ -37,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     
     if ($id) {
-        $stmt = $pdo->prepare('UPDATE programmes SET title=?, description=?, image_url=?, display_order=? WHERE id=?');
-        $stmt->execute([$title, $description, $image_url, $display_order, $id]);
+        $stmt = $pdo->prepare('UPDATE programmes SET title=?, description=?, price=?, image_url=?, display_order=? WHERE id=?');
+        $stmt->execute([$title, $description, $price, $image_url, $display_order, $id]);
     } else {
-        $stmt = $pdo->prepare('INSERT INTO programmes (title, description, image_url, display_order) VALUES (?, ?, ?, ?)');
-        $stmt->execute([$title, $description, $image_url, $display_order]);
+        $stmt = $pdo->prepare('INSERT INTO programmes (title, description, price, image_url, display_order) VALUES (?, ?, ?, ?, ?)');
+        $stmt->execute([$title, $description, $price, $image_url, $display_order]);
     }
     header('Location: programmes.php?msg=saved');
     exit;

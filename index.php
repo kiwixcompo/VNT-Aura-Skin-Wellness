@@ -95,28 +95,33 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
     
     
     <!-- START HERE: SKIN CONSULTATION -->
-    <section id="start-here" class="py-32 px-6 bg-[#f4f2ee]">
+    <section id="start-here" class="py-32 px-6 bg-bg">
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="order-2 lg:order-1 space-y-6 reveal-up">
                     <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Start Here</span>
-                    <h2 class="text-4xl md:text-5xl font-heading text-secondary">New Client Consultation</h2>
+                    <h2 class="text-4xl md:text-5xl font-heading text-secondary"><?= htmlspecialchars(get_setting($pdo, 'consultation_title', 'New Client Consultation')) ?></h2>
                     <p class="text-gray-700 font-light leading-relaxed text-lg">
                         Every skin journey starts with a consultation.
                     </p>
                     <div class="bg-white/60 p-6 rounded-xl border border-gray-200 shadow-sm mt-4">
                         <h4 class="font-medium text-secondary mb-3">Your consultation includes:</h4>
                         <ul class="space-y-2 text-gray-700 font-light">
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-3"></i> Skin assessment</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-3"></i> Discussion of concerns and goals</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-3"></i> Lifestyle and skincare review</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-3"></i> Treatment recommendations</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-3"></i> Personalised treatment plan</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-3"></i> Homecare recommendations</li>
+                            <?php 
+                            $raw_bullets = get_setting($pdo, 'consultation_text', '');
+                            if (empty($raw_bullets)) {
+                                $raw_bullets = "Skin assessment\nDiscussion of concerns and goals\nLifestyle and skincare review\nTreatment recommendations\nPersonalised treatment plan\nHomecare recommendations";
+                            }
+                            $bullets = array_filter(array_map('trim', explode("\n", $raw_bullets)));
+                            foreach ($bullets as $b): 
+                                $b = ltrim($b, '* ');
+                            ?>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-3"></i> <?= htmlspecialchars($b) ?></li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                     <div class="pt-4 flex flex-col sm:flex-row items-center gap-6">
-                        <a href="#" onclick="openBookingModal('Skin Consultation'); return false;" class="btn-luxury inline-block px-10 py-4 bg-secondary text-white uppercase tracking-widest text-sm hover:bg-opacity-90 transition-all duration-300 shadow-lg">Book Consultation</a>
+                        <a href="#" onclick="openBookingModal('Skin Consultation'); return false;" class="btn-luxury inline-block px-10 py-4 bg-bg text-text uppercase tracking-widest text-sm hover:bg-opacity-90 transition-all duration-300 shadow-lg">Book Consultation</a>
                         <div>
                             <p class="text-xl font-heading text-secondary">£20</p>
                             <p class="text-xs text-gray-500 uppercase tracking-widest">(Redeemable against treatment booked on the day)</p>
@@ -125,7 +130,13 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                 </div>
                 <div class="order-1 lg:order-2 reveal-up">
                     <div class="relative w-full aspect-square rounded-2xl overflow-hidden shadow-2xl">
-                        <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71c9?auto=format&fit=crop&q=80&w=1000" alt="Skin Consultation" class="w-full h-full object-cover">
+                        <?php 
+                        $cType = get_setting($pdo, 'consultation_image_type', 'url');
+                        $cUrl = get_setting($pdo, 'consultation_image_url', 'https://images.unsplash.com/photo-1616394584738-fc6e612e71c9?auto=format&fit=crop&q=80&w=1000');
+                        $cUpload = get_setting($pdo, 'consultation_image_upload', '');
+                        $consultationImage = ($cType === 'upload' && !empty($cUpload)) ? $cUpload : $cUrl;
+                        ?>
+                        <img src="<?= htmlspecialchars($consultationImage) ?>" alt="Consultation" class="w-full h-full object-cover">
                     </div>
                 </div>
             </div>
@@ -134,12 +145,12 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
 
 
     <!-- OUR SKIN JOURNEYS -->
-    <section id="programmes" class="py-32 px-6 bg-secondary text-bg">
+    <section id="programmes" class="py-32 px-6 bg-bg text-text">
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
                 <div class="max-w-2xl">
                     <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Curated Experiences</span>
-                    <h2 class="text-4xl md:text-5xl font-heading mb-6">Our Skin Journeys</h2>
+                    <h2 class="text-4xl md:text-5xl font-heading mb-6">Our Packages</h2>
                     <p class="text-gray-400 font-light text-lg">We don't just perform treatments; we deliver results. Our skin journeys combine multiple modalities over a set period to fundamentally transform your skin.</p>
                 </div>
             </div>
@@ -213,7 +224,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                                 <p><strong class="text-secondary font-medium block mb-1">Key Benefits:</strong> <?= htmlspecialchars($t['key_benefits']) ?></p>
                             </div>
                             
-                            <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($t['title'])) ?>'); return false;" class="block text-center w-full py-3 bg-secondary text-white uppercase tracking-widest text-xs hover:bg-opacity-90 transition-all mt-4 rounded">Book Therapy</a>
+                            <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($t['title'])) ?>'); return false;" class="block text-center w-full py-3 bg-bg text-text uppercase tracking-widest text-xs hover:bg-opacity-90 transition-all mt-4 rounded">Book Therapy</a>
                         </div>
                     </div>
                 </div>
@@ -324,7 +335,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
     </section>
 
     <!-- TESTIMONIALS -->
-    <section class="py-32 px-6 bg-secondary text-white relative overflow-hidden">
+    <section class="py-32 px-6 bg-bg text-text relative overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         <div class="max-w-6xl mx-auto relative z-10">
             <div class="text-center mb-16 reveal-up">
@@ -402,7 +413,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
 
     <!-- CONTACT CTA -->
     <section id="contact" class="py-40 px-6 bg-[url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center relative bg-fixed">
-        <div class="absolute inset-0 bg-secondary/80"></div>
+        <div class="absolute inset-0 bg-bg/90"></div>
         <div class="relative z-10 max-w-4xl mx-auto text-center reveal-up">
             <h2 class="text-5xl md:text-7xl font-heading text-primary mb-8">Ready to Begin Your Skin Journey?</h2>
             <p class="text-xl text-gray-300 font-light mb-12 max-w-2xl mx-auto">
