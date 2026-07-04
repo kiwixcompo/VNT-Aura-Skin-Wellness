@@ -103,7 +103,7 @@ $programmes = $stmt->fetchAll();
                         <p class="text-sm text-gray-600 line-clamp-3 mb-4"><?= htmlspecialchars($p['description']) ?></p>
                         <div class="text-xs text-gray-400 mb-4">Display Order: <?= $p['display_order'] ?></div>
                         <div class="flex justify-end space-x-2 mt-auto">
-                            <button onclick='editModal(<?= htmlspecialchars(json_encode($p), ENT_QUOTES, \'UTF-8\') ?>)' class="text-blue-600 hover:bg-blue-50 px-3 py-1 rounded text-sm"><i class="fas fa-edit"></i> Edit</button>
+                            <button onclick='editModal(<?= htmlspecialchars(json_encode($p), ENT_QUOTES, 'UTF-8') ?>)' class="text-blue-600 hover:bg-blue-50 px-3 py-1 rounded text-sm"><i class="fas fa-edit"></i> Edit</button>
                             <form method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this?');">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?= $p['id'] ?>">
