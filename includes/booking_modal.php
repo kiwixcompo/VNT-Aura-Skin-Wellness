@@ -145,4 +145,30 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
 });
 </script>
 
+<?php else: ?>
+<!-- Faces Consent Iframe Modal -->
+<div id="facesModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-[100] p-4 md:p-8" onclick="closeFacesModal()">
+    <div class="bg-bg w-full max-w-5xl h-[90vh] md:h-[85vh] rounded-2xl shadow-2xl overflow-hidden relative flex flex-col" onclick="event.stopPropagation()">
+        <div class="p-4 border-b border-gray-200 relative shrink-0 flex justify-between items-center bg-white">
+            <h2 class="text-xl font-heading text-secondary">Book Your Appointment</h2>
+            <button type="button" onclick="closeFacesModal(); return false;" class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-800 hover:bg-gray-200 transition-colors cursor-pointer">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="flex-grow w-full h-full bg-white relative">
+            <div id="facesLoader" class="absolute inset-0 flex items-center justify-center bg-white">
+                <i class="fas fa-spinner fa-spin text-3xl text-accent"></i>
+            </div>
+            <iframe id="facesIframe" src="" class="w-full h-full border-0 relative z-10" onload="document.getElementById('facesLoader').style.display='none'"></iframe>
+        </div>
+    </div>
+</div>
+<script>
+    function closeFacesModal() {
+        document.getElementById('facesModal').classList.remove('flex');
+        document.getElementById('facesModal').classList.add('hidden');
+        document.body.style.overflow = '';
+        document.getElementById('facesIframe').src = ''; // clear iframe
+    }
+</script>
 <?php endif; ?>

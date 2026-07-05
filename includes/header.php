@@ -79,17 +79,39 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
         const globalBookingMode = '<?= htmlspecialchars(get_setting($pdo, "booking_mode", "faces")) ?>';
         const globalFacesUrl = '<?= htmlspecialchars(get_setting($pdo, "faces_url", "")) ?>';
 
-        function openBookingModal() {
+        function openBookingModal(serviceName = null) {
             // Check if Faces is enabled
             if (globalBookingMode === 'faces' && globalFacesUrl) {
-                window.open(globalFacesUrl, '_blank');
+                const iframe = document.getElementById('facesIframe');
+                if (iframe) {
+                    document.getElementById('facesLoader').style.display = 'flex';
+                    iframe.src = globalFacesUrl;
+                }
+                const facesModal = document.getElementById('facesModal');
+                if (facesModal) {
+                    facesModal.classList.remove('hidden');
+                    facesModal.classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    // Fallback just in case
+                    window.open(globalFacesUrl, '_blank');
+                }
+                
+                const mobileMenu = document.getElementById('mobile-menu');
+                if(mobileMenu) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('flex');
+                }
                 return false;
             }
 
-            document.getElementById('bookingModal').classList.remove('hidden');
-            document.getElementById('bookingModal').classList.add('flex');
-            document.body.style.overflow = 'hidden';
-            // Hide mobile menu if open
+            const bookingModal = document.getElementById('bookingModal');
+            if (bookingModal) {
+                bookingModal.classList.remove('hidden');
+                bookingModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+            
             const mobileMenu = document.getElementById('mobile-menu');
             if(mobileMenu) {
                 mobileMenu.classList.add('hidden');
