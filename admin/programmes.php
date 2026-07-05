@@ -16,7 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $id = $_POST['id'] ?? '';
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
-    $price = $_POST['price'] ?? 0, $_POST['duration'] ?? '', $_POST['faces_link'] ?? '';
+    $price = $_POST['price'] ?? 0;
+    $duration = $_POST['duration'] ?? '';
+    $faces_link = $_POST['faces_link'] ?? '';
     $image_url = $_POST['image_url'] ?? '';
     $display_order = $_POST['display_order'] ?? 0;
     
