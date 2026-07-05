@@ -157,14 +157,14 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
                 <?php foreach ($programmes as $p): ?>
-                <div class="group reveal-up bg-white/5 rounded-2xl overflow-hidden border border-white/10 hover:border-white/30 transition-colors">
+                <div class="group reveal-up bg-black/5 rounded-2xl overflow-hidden border border-black/5 hover:border-white/30 transition-colors">
                     <div class="overflow-hidden relative h-64">
                         <img src="<?= htmlspecialchars($p['image_url']) ?>" alt="<?= htmlspecialchars($p['title']) ?>" class="w-full h-full object-cover grayscale opacity-80 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#1a1c1a] to-transparent opacity-80"></div>
                         <h3 class="absolute bottom-6 left-8 text-3xl font-heading text-white"><?= htmlspecialchars($p['title']) ?></h3>
                     </div>
                     <div class="p-8">
-                        <div class="text-gray-300 font-light leading-relaxed mb-8 space-y-4 text-sm prose prose-invert prose-p:text-gray-300 prose-ul:text-gray-300">
+                        <div class="text-gray-700 font-light leading-relaxed mb-8 space-y-4 text-sm prose prose-p:text-gray-700 prose-ul:text-gray-700">
                             <?php
                             $desc = htmlspecialchars($p['description']);
                             // Simple parser to make bullet points actual UL/LI so it looks clean
@@ -345,34 +345,34 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Testimonial 1 -->
-                <div class="bg-white/5 p-8 border border-white/10 rounded-xl reveal-up backdrop-blur-sm">
+                <div class="bg-black/5 p-8 border border-black/5 rounded-xl reveal-up backdrop-blur-sm">
                     <div class="flex text-accent mb-4 text-sm">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
-                    <p class="font-light italic text-gray-300 mb-6 leading-relaxed">
+                    <p class="font-light italic text-gray-700 mb-6 leading-relaxed">
                         "Valerie completely transformed my skin. I struggled with adult acne for years, and her bespoke programme cleared it up in months. Highly recommend!"
                     </p>
-                    <p class="font-medium tracking-widest text-sm uppercase text-white">- Sarah T.</p>
+                    <p class="font-medium tracking-widest text-sm uppercase text-text">- Sarah T.</p>
                 </div>
                 <!-- Testimonial 2 -->
-                <div class="bg-white/5 p-8 border border-white/10 rounded-xl reveal-up backdrop-blur-sm delay-100">
+                <div class="bg-black/5 p-8 border border-black/5 rounded-xl reveal-up backdrop-blur-sm delay-100">
                     <div class="flex text-accent mb-4 text-sm">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
-                    <p class="font-light italic text-gray-300 mb-6 leading-relaxed">
+                    <p class="font-light italic text-gray-700 mb-6 leading-relaxed">
                         "The most luxurious and informative facial I've ever had. My skin has never looked so glowing and plump. The clinic is absolutely beautiful."
                     </p>
-                    <p class="font-medium tracking-widest text-sm uppercase text-white">- Emily R.</p>
+                    <p class="font-medium tracking-widest text-sm uppercase text-text">- Emily R.</p>
                 </div>
                 <!-- Testimonial 3 -->
-                <div class="bg-white/5 p-8 border border-white/10 rounded-xl reveal-up backdrop-blur-sm delay-200">
+                <div class="bg-black/5 p-8 border border-black/5 rounded-xl reveal-up backdrop-blur-sm delay-200">
                     <div class="flex text-accent mb-4 text-sm">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
-                    <p class="font-light italic text-gray-300 mb-6 leading-relaxed">
+                    <p class="font-light italic text-gray-700 mb-6 leading-relaxed">
                         "Her knowledge of pigmentation is unmatched. I felt so supported throughout my 12-week programme and the results speak for themselves."
                     </p>
-                    <p class="font-medium tracking-widest text-sm uppercase text-white">- Jessica M.</p>
+                    <p class="font-medium tracking-widest text-sm uppercase text-text">- Jessica M.</p>
                 </div>
             </div>
         </div>
@@ -415,13 +415,13 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
     <section id="contact" class="py-40 px-6 bg-[url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center relative bg-fixed">
         <div class="absolute inset-0 bg-bg/90"></div>
         <div class="relative z-10 max-w-4xl mx-auto text-center reveal-up">
-            <h2 class="text-5xl md:text-7xl font-heading text-primary mb-8">Ready to Begin Your Skin Journey?</h2>
-            <p class="text-xl text-gray-300 font-light mb-12 max-w-2xl mx-auto">
+            <h2 class="text-5xl md:text-7xl font-heading text-secondary mb-8">Ready to Begin Your Skin Journey?</h2>
+            <p class="text-xl text-gray-700 font-light mb-12 max-w-2xl mx-auto">
                 Book your consultation today and take the first step towards healthier, more radiant skin.
             </p>
             <div class="flex flex-col sm:flex-row gap-6 justify-center">
-                <a href="#" onclick="openBookingModal(); return false;" class="btn-luxury inline-block px-10 py-4 bg-white/10 backdrop-blur-sm border border-white/30 text-white uppercase tracking-widest text-sm hover:bg-white hover:text-secondary transition-all duration-300 shadow-lg">Book Consultation</a>
-                <a href="mailto:vntauraskinandwellness@gmail.com" class="btn-luxury px-10 py-5 border border-primary text-primary uppercase tracking-widest text-sm font-semibold hover:bg-primary hover:text-secondary transition-colors">Contact Us</a>
+                <a href="#" onclick="openBookingModal(); return false;" class="btn-luxury inline-block px-10 py-4 bg-secondary text-white uppercase tracking-widest text-sm hover:bg-opacity-90 transition-all duration-300 shadow-lg">Book Consultation</a>
+                <a href="mailto:vntauraskinandwellness@gmail.com" class="btn-luxury px-10 py-5 border border-secondary text-secondary uppercase tracking-widest text-sm font-semibold hover:bg-secondary hover:text-white transition-colors">Contact Us</a>
             </div>
         </div>
     </section>

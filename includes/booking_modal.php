@@ -1,3 +1,4 @@
+<?php if (get_setting($pdo, 'booking_mode', 'faces') === 'custom'): ?>
 <!-- Booking Modal -->
 <div id="bookingModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-[100] p-4" onclick="closeBookingModal()">
     <div class="bg-bg w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden relative flex flex-col max-h-[90vh]" onclick="event.stopPropagation()">
@@ -79,6 +80,10 @@
 // Attach service if provided via button click
 const originalOpenModal = window.openBookingModal;
 window.openBookingModal = function(serviceName = null) {
+    if (globalBookingMode === 'faces' && globalFacesUrl) {
+        window.open(globalFacesUrl, '_blank');
+        return false;
+    }
     if(originalOpenModal) originalOpenModal();
     if(serviceName) {
         const select = document.getElementById('bookingService');
@@ -139,3 +144,5 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
     });
 });
 </script>
+
+<?php endif; ?>

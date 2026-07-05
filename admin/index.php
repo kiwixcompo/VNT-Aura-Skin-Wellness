@@ -31,6 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'consultation_image_url' => $_POST['consultation_image_url'] ?? '',
         'consultation_image_upload' => $_POST['consultation_image_upload'] ?? '',
         'paypal_email' => $_POST['paypal_email'] ?? '',
+        'booking_mode' => $_POST['booking_mode'] ?? 'faces',
+        'faces_url' => $_POST['faces_url'] ?? '',
         'seo_title' => $_POST['seo_title'] ?? '',
         'seo_description' => $_POST['seo_description'] ?? '',
         
