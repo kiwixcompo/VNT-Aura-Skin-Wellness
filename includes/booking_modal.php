@@ -4,22 +4,50 @@
 global $pdo;
 $all_services = [];
 if (isset($pdo)) {
-    $stmt1 = $pdo->query('SELECT title, duration FROM treatments');
-    while ($row = $stmt1->fetch()) {
-        $all_services[] = [
-            'title' => $row['title'],
-            'price' => 'Price on consultation',
-            'duration' => $row['duration'] ?: '1 hr'
-        ];
+    try {
+        $stmt1 = $pdo->query('SELECT title, duration FROM treatments');
+        while ($row = $stmt1->fetch()) {
+            $all_services[] = [
+                'title' => $row['title'],
+                'price' => 'Price on consultation',
+                'duration' => $row['duration'] ?: '1 hr'
+            ];
+        }
+    } catch (PDOException $e) {
+        // Fallback if 'duration' column is missing from treatments table
+        try {
+            $stmt1b = $pdo->query('SELECT title FROM treatments');
+            while ($row = $stmt1b->fetch()) {
+                $all_services[] = [
+                    'title' => $row['title'],
+                    'price' => 'Price on consultation',
+                    'duration' => '1 hr'
+                ];
+            }
+        } catch (Exception $ex) {}
     }
     
-    $stmt2 = $pdo->query('SELECT title, price, duration FROM programmes');
-    while ($row = $stmt2->fetch()) {
-        $all_services[] = [
-            'title' => $row['title'],
-            'price' => '£' . number_format($row['price'], 2),
-            'duration' => $row['duration'] ?: '1 hr'
-        ];
+    try {
+        $stmt2 = $pdo->query('SELECT title, price, duration FROM programmes');
+        while ($row = $stmt2->fetch()) {
+            $all_services[] = [
+                'title' => $row['title'],
+                'price' => '£' . number_format($row['price'], 2),
+                'duration' => $row['duration'] ?: '1 hr'
+            ];
+        }
+    } catch (PDOException $e) {
+        // Fallback if 'duration' column is missing from programmes table
+        try {
+            $stmt2b = $pdo->query('SELECT title, price FROM programmes');
+            while ($row = $stmt2b->fetch()) {
+                $all_services[] = [
+                    'title' => $row['title'],
+                    'price' => '£' . number_format($row['price'], 2),
+                    'duration' => '1 hr'
+                ];
+            }
+        } catch (Exception $ex) {}
     }
 }
 ?>
