@@ -79,13 +79,15 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
         const globalBookingMode = '<?= htmlspecialchars(get_setting($pdo, "booking_mode", "faces")) ?>';
         const globalFacesUrl = '<?= htmlspecialchars(get_setting($pdo, "faces_url", "")) ?>';
 
-        function openBookingModal(serviceName = null) {
+        function openBookingModal(serviceName = null, serviceFacesUrl = null) {
             // Check if Faces is enabled
-            if (globalBookingMode === 'faces' && globalFacesUrl) {
+            let targetUrl = serviceFacesUrl && serviceFacesUrl.trim() !== '' ? serviceFacesUrl : globalFacesUrl;
+            
+            if (globalBookingMode === 'faces' && targetUrl) {
                 const iframe = document.getElementById('facesIframe');
                 if (iframe) {
                     document.getElementById('facesLoader').style.display = 'flex';
-                    iframe.src = globalFacesUrl;
+                    iframe.src = targetUrl;
                 }
                 const facesModal = document.getElementById('facesModal');
                 if (facesModal) {
@@ -94,7 +96,7 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
                     document.body.style.overflow = 'hidden';
                 } else {
                     // Fallback just in case
-                    window.open(globalFacesUrl, '_blank');
+                    window.open(targetUrl, '_blank');
                 }
                 
                 const mobileMenu = document.getElementById('mobile-menu');

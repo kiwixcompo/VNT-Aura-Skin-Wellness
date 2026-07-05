@@ -174,7 +174,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                             echo nl2br($desc);
                             ?>
                         </div>
-                        <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($p['title'])) ?>'); return false;" class="block text-center text-xs uppercase tracking-widest text-bg bg-accent hover:bg-white transition-colors py-4 rounded font-medium">
+                        <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($p['title'])) ?>', '<?= htmlspecialchars(addslashes($p['faces_link'] ?? '')) ?>'); return false;" class="block text-center text-xs uppercase tracking-widest text-bg bg-accent hover:bg-white transition-colors py-4 rounded font-medium">
                             Book This Journey 
                         </a>
                     </div>
@@ -224,7 +224,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                                 <p><strong class="text-secondary font-medium block mb-1">Key Benefits:</strong> <?= htmlspecialchars($t['key_benefits']) ?></p>
                             </div>
                             
-                            <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($t['title'])) ?>'); return false;" class="block text-center w-full py-3 bg-bg text-text uppercase tracking-widest text-xs hover:bg-opacity-90 transition-all mt-4 rounded">Book Therapy</a>
+                            <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($t['title'])) ?>', '<?= htmlspecialchars(addslashes($t['faces_link'] ?? '')) ?>'); return false;" class="block text-center w-full py-3 bg-bg text-text uppercase tracking-widest text-xs hover:bg-opacity-90 transition-all mt-4 rounded">Book Therapy</a>
                         </div>
                     </div>
                 </div>
