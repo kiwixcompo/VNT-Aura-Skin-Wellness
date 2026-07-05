@@ -33,6 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'paypal_email' => $_POST['paypal_email'] ?? '',
         'booking_mode' => $_POST['booking_mode'] ?? 'faces',
         'faces_url' => $_POST['faces_url'] ?? '',
+        'google_ical_url' => $_POST['google_ical_url'] ?? '',
+        'consent_form_url' => $_POST['consent_form_url'] ?? '',
         'seo_title' => $_POST['seo_title'] ?? '',
         'seo_description' => $_POST['seo_description'] ?? '',
         

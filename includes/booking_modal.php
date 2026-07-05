@@ -69,11 +69,10 @@
                     </div>
                     <div>
                         <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Time</label>
-                        <select name="time" class="w-full bg-white border border-gray-200 px-4 py-3 focus:outline-none focus:border-accent font-light text-gray-700" required>
-                            <option value="Morning">Morning (9am - 12pm)</option>
-                            <option value="Afternoon">Afternoon (12pm - 4pm)</option>
-                            <option value="Evening">Evening (4pm - 7pm)</option>
+                        <select name="time" id="bookingTime" class="w-full bg-white border border-gray-200 px-4 py-3 focus:outline-none focus:border-accent font-light text-gray-700" required>
+                            <option value="">Select a date first</option>
                         </select>
+                        <p id="bookingTimeLoader" class="text-xs text-blue-500 mt-1 hidden"><i class="fas fa-spinner fa-spin"></i> Checking availability...</p>
                     </div>
                 </div>
                 <div>
@@ -256,7 +255,40 @@ function filterServices() {
     renderServiceList(q);
 }
 
+
+// Date selection logic
+document.querySelector('input[name="date"]').addEventListener('change', function() {
+    const date = this.value;
+    const timeSelect = document.getElementById('bookingTime');
+    const loader = document.getElementById('bookingTimeLoader');
+    
+    timeSelect.innerHTML = '<option value="">Loading...</option>';
+    loader.classList.remove('hidden');
+    
+    fetch('api/slots.php?date=' + date)
+    .then(res => res.json())
+    .then(data => {
+        loader.classList.add('hidden');
+        timeSelect.innerHTML = '';
+        if (data.slots && data.slots.length > 0) {
+            data.slots.forEach(slot => {
+                const opt = document.createElement('option');
+                opt.value = slot;
+                opt.textContent = slot;
+                timeSelect.appendChild(opt);
+            });
+        } else {
+            timeSelect.innerHTML = '<option value="">No slots available</option>';
+        }
+    })
+    .catch(err => {
+        loader.classList.add('hidden');
+        timeSelect.innerHTML = '<option value="">Error loading slots</option>';
+    });
+});
+
 // Handle Form Submission
+
 document.getElementById('bookingForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const btn = document.getElementById('bookingSubmit');
