@@ -115,8 +115,32 @@ let shoppingCart = [];
 let currentView = 'summary';
 
 const originalOpenModal = window.openBookingModal;
-window.openBookingModal = function(serviceName = null) {
-    // Hybrid Flow: We now always show the cart first to capture data.
+window.openBookingModal = function(serviceName = null, serviceFacesUrl = null) {
+    let targetUrl = serviceFacesUrl && serviceFacesUrl.trim() !== '' ? serviceFacesUrl : (typeof globalFacesUrl !== 'undefined' ? globalFacesUrl : '');
+    
+    if (globalBookingMode === 'faces' && targetUrl) {
+        const iframe = document.getElementById('facesIframe');
+        if (iframe) {
+            document.getElementById('facesLoader').style.display = 'flex';
+            iframe.src = targetUrl;
+        }
+        const facesModal = document.getElementById('facesModal');
+        if (facesModal) {
+            facesModal.classList.remove('hidden');
+            facesModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            
+            const mobileMenu = document.getElementById('mobile-menu');
+            if(mobileMenu) {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+            }
+        }
+        return false;
+    }
+    
+    // Custom Cart Flow
+
     
     // Reset cart and add the clicked service
     shoppingCart = [];
