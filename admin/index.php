@@ -569,7 +569,25 @@ $settings = array_merge($defaultSettings, $dbSettings);
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-sm border mb-8">
-                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Contact & Footer</h3>
+                
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-8 border-l-4 border-blue-500">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Booking System Configuration</h3>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Booking Mode</label>
+                    <select name="booking_mode" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="faces" <?= ($settings['booking_mode'] ?? 'faces') === 'faces' ? 'selected' : '' ?>>Use Faces Consent (Recommended)</option>
+                        <option value="custom" <?= ($settings['booking_mode'] ?? '') === 'custom' ? 'selected' : '' ?>>Use Basic Email Booking</option>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-2">Faces Consent handles Google Calendar sync, deposits, forms, and reminders.</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Faces Booking Link</label>
+                    <input type="url" name="faces_url" value="<?= htmlspecialchars($settings['faces_url'] ?? '') ?>" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://facesconsent.com/book/vntaura">
+                    <p class="text-xs text-gray-500 mt-2">Required if using Faces Consent. All "Book" buttons will securely redirect to this link.</p>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-4 border-b pb-2">Contact & Footer</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div><label class="block text-gray-700 font-medium mb-1">Contact Title</label><input type="text" name="contact_title" value="<?= htmlspecialchars($settings['contact_title'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
                     <div><label class="block text-gray-700 font-medium mb-1">Display Email</label><input type="text" name="contact_email_display" value="<?= htmlspecialchars($settings['contact_email_display'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>

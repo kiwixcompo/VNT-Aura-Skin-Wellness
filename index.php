@@ -121,7 +121,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                         </ul>
                     </div>
                     <div class="pt-4 flex flex-col sm:flex-row items-center gap-6">
-                        <a href="#" onclick="openBookingModal('Skin Consultation'); return false;" class="btn-luxury inline-block px-10 py-4 bg-bg text-text uppercase tracking-widest text-sm hover:bg-opacity-90 transition-all duration-300 shadow-lg">Book Consultation</a>
+                        <a href="#" onclick="openBookingModal('Skin Consultation'); return false;" class="inline-block rounded-full border border-gray-200 px-10 py-4 bg-bg text-text hover:bg-gray-50 uppercase tracking-widest text-sm hover:bg-opacity-90 transition-all duration-300 shadow-lg">Book Consultation</a>
                         <div>
                             <p class="text-xl font-heading text-secondary">£20</p>
                             <p class="text-xs text-gray-500 uppercase tracking-widest">(Redeemable against treatment booked on the day)</p>
@@ -420,8 +420,8 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                 Book your consultation today and take the first step towards healthier, more radiant skin.
             </p>
             <div class="flex flex-col sm:flex-row gap-6 justify-center">
-                <a href="#" onclick="openBookingModal(); return false;" class="btn-luxury inline-block px-10 py-4 bg-secondary text-white uppercase tracking-widest text-sm hover:bg-opacity-90 transition-all duration-300 shadow-lg">Book Consultation</a>
-                <a href="mailto:vntauraskinandwellness@gmail.com" class="btn-luxury px-10 py-5 border border-secondary text-secondary uppercase tracking-widest text-sm font-semibold hover:bg-secondary hover:text-white transition-colors">Contact Us</a>
+                <a href="#" onclick="openBookingModal(); return false;" class="inline-block rounded-full border border-secondary px-10 py-4 bg-secondary text-white hover:bg-opacity-90 uppercase tracking-widest text-sm hover:bg-opacity-90 transition-all duration-300 shadow-lg">Book Consultation</a>
+                <a href="mailto:vntauraskinandwellness@gmail.com" class="inline-flex items-center justify-center rounded-full px-10 py-5 border border-secondary text-secondary hover:bg-secondary hover:text-white uppercase tracking-widest text-sm font-semibold hover:bg-secondary hover:text-white transition-colors">Contact Us</a>
             </div>
         </div>
     </section>
