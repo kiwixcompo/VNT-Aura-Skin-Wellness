@@ -426,6 +426,14 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
         </div>
     </section>
 
+    <!-- Pseudo-Cron for Aftercare Emails -->
+    <script>
+        // Runs quietly in the background on page load
+        setTimeout(() => {
+            fetch('api/cron_aftercare.php').catch(e => console.log('Cron err', e));
+        }, 5000);
+    </script>
+
 </main>
 
 

@@ -1,5 +1,32 @@
-<?php if (get_setting($pdo, 'booking_mode', 'faces') === 'custom'): ?>
 <!-- Booking Modal (Service Cart Flow) -->
+<?php
+// Fetch all treatments and programmes to populate the custom cart
+global $pdo;
+$all_services = [];
+if (isset($pdo)) {
+    $stmt1 = $pdo->query('SELECT title, duration FROM treatments');
+    while ($row = $stmt1->fetch()) {
+        $all_services[] = [
+            'title' => $row['title'],
+            'price' => 'Price on consultation',
+            'duration' => $row['duration'] ?: '1 hr'
+        ];
+    }
+    
+    $stmt2 = $pdo->query('SELECT title, price, duration FROM programmes');
+    while ($row = $stmt2->fetch()) {
+        $all_services[] = [
+            'title' => $row['title'],
+            'price' => '£' . number_format($row['price'], 2),
+            'duration' => $row['duration'] ?: '1 hr'
+        ];
+    }
+}
+?>
+<script>
+    const globalServicesList = <?= json_encode($all_services) ?>;
+</script>
+
 <div id="bookingModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-[100] p-4" onclick="closeBookingModal()">
     <div class="bg-bg w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden relative flex flex-col max-h-[90vh]" onclick="event.stopPropagation()">
         
@@ -90,8 +117,31 @@
                             <input type="radio" name="payment_method" value="paypal" class="accent-secondary">
                             <span class="text-sm text-gray-700">Pay Deposit (£20) via PayPal</span>
                         </label>
+                        <label class="flex items-center gap-2 cursor-pointer bg-red-50 p-1 rounded border border-red-200">
+                            <input type="radio" name="payment_method" value="bypass" class="accent-red-500">
+                            <span class="text-sm text-red-700 font-bold">Bypass Payment (Test)</span>
+                        </label>
                     </div>
                 </div>
+                
+                <input type="hidden" name="is_faces_flow" id="isFacesFlow" value="0">
+                <input type="hidden" name="dynamic_faces_url" id="dynamicFacesUrl" value="">
+                
+                <script>
+                    // Execute after a tiny delay so globalBookingMode is available
+                    setTimeout(() => {
+                        if (globalBookingMode === 'faces') {
+                            const pSect = document.getElementById('paymentMethodSection');
+                            if(pSect) pSect.style.display = 'none';
+                            
+                            const btnSubmit = document.getElementById('bookingSubmit');
+                            if(btnSubmit) btnSubmit.textContent = 'Proceed to Faces Consent';
+                            
+                            const isFacesInput = document.getElementById('isFacesFlow');
+                            if(isFacesInput) isFacesInput.value = '1';
+                        }
+                    }, 100);
+                </script>
                 
                 <input type="hidden" name="is_faces_flow" id="isFacesFlow" value="0">
                 
@@ -118,26 +168,12 @@ const originalOpenModal = window.openBookingModal;
 window.openBookingModal = function(serviceName = null, serviceFacesUrl = null) {
     let targetUrl = serviceFacesUrl && serviceFacesUrl.trim() !== '' ? serviceFacesUrl : (typeof globalFacesUrl !== 'undefined' ? globalFacesUrl : '');
     
+    // Store the target URL for later use if we are in faces mode
     if (globalBookingMode === 'faces' && targetUrl) {
-        const iframe = document.getElementById('facesIframe');
-        if (iframe) {
-            document.getElementById('facesLoader').style.display = 'flex';
-            iframe.src = targetUrl;
-        }
-        const facesModal = document.getElementById('facesModal');
-        if (facesModal) {
-            facesModal.classList.remove('hidden');
-            facesModal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-            
-            const mobileMenu = document.getElementById('mobile-menu');
-            if(mobileMenu) {
-                mobileMenu.classList.add('hidden');
-                mobileMenu.classList.remove('flex');
-            }
-        }
-        return false;
+        window.currentFacesUrl = targetUrl;
     }
+    
+    // Hybrid Flow: We now always show the cart first to capture data.
     
     // Custom Cart Flow
 
@@ -324,6 +360,9 @@ document.querySelector('input[name="date"]').addEventListener('change', function
 document.getElementById('bookingForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const btn = document.getElementById('bookingSubmit');
+    if (window.currentFacesUrl) {
+        document.getElementById('dynamicFacesUrl').value = window.currentFacesUrl;
+    }
     const msg = document.getElementById('bookingMsg');
     
     btn.textContent = 'Submitting...';
@@ -413,5 +452,4 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
         document.body.style.overflow = '';
         document.getElementById('facesIframe').src = ''; // clear iframe
     }
-</script>
-<?php endif; ?>
+</script>

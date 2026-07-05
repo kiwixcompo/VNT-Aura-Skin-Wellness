@@ -298,4 +298,19 @@ class EmailHelper
         <p>Best regards,<br>VNT Aura Skin & Wellness</p>
         ";
     }
+
+    public function sendAftercareEmail($to, $clientName, $serviceName, $aftercareContent) {
+        $subject = "Aftercare Instructions: " . $serviceName;
+        $html = "
+            <h2>Hi " . htmlspecialchars($clientName) . ",</h2>
+            <p>Thank you for visiting VNT Aura Skin + Wellness today for your <strong>" . htmlspecialchars($serviceName) . "</strong>.</p>
+            <p>To ensure you get the best possible results, please follow these aftercare instructions carefully:</p>
+            <div style='background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;'>
+                " . nl2br(htmlspecialchars($aftercareContent)) . "
+            </div>
+            <p>If you experience any unexpected reactions or have questions, please don't hesitate to reach out to us.</p>
+            <p>Best regards,<br>VNT Aura Skin + Wellness</p>
+        ";
+        return $this->sendEmail($to, $subject, $html);
+    }
 }

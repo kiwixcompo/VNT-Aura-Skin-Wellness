@@ -24,8 +24,25 @@ if (empty($name) || empty($email) || empty($phone) || empty($service) || empty($
 }
 
 try {
-    $stmt = $pdo->prepare('INSERT INTO bookings (client_name, client_email, client_phone, service, preferred_date, preferred_time, notes) VALUES (?, ?, ?, ?, ?, ?, ?)');
-    $stmt->execute([$name, $email, $phone, $service, $date, $time, $notes]);
+    // Fetch duration from DB based on service title
+    $duration = '1 hr'; // Default
+    $stmtDuration = $pdo->prepare("SELECT duration FROM treatments WHERE title = ?");
+    $stmtDuration->execute([$service]);
+    $tRes = $stmtDuration->fetch();
+    if ($tRes) {
+        $duration = $tRes['duration'] ?: '1 hr';
+    } else {
+        $stmtDuration = $pdo->prepare("SELECT duration FROM programmes WHERE title = ?");
+        $stmtDuration->execute([$service]);
+        $pRes = $stmtDuration->fetch();
+        if ($pRes) {
+            $duration = $pRes['duration'] ?: '1 hr';
+        }
+    }
+
+    $stmt = $pdo->prepare('INSERT INTO bookings (client_name, client_email, client_phone, service, preferred_date, preferred_time, notes, duration) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+    $stmt->execute([$name, $email, $phone, $service, $date, $time, $notes, $duration]);
+    $booking_id = $pdo->lastInsertId();
 
     require_once __DIR__ . '/../includes/EmailHelper.php';
     
@@ -49,23 +66,39 @@ try {
     }
     
 
-    if ($notify_client && !empty($email)) {
+    $payment_method = $_POST['payment_method'] ?? 'later';
+    
+    // We only send the confirmation immediately if they "Pay Later" (or if it's faces flow, where we don't handle confirmation anyway)
+    // If it's paypal or bypass, we send the confirmation AFTER they fill the intake form!
+    if ($notify_client && !empty($email) && $payment_method === 'later') {
         $emailHelper->sendClientBookingConfirmation($email, $bookingData);
     }
     
     $is_faces_flow = $_POST['is_faces_flow'] ?? '0';
     if ($is_faces_flow === '1') {
-        $faces_url = get_setting($pdo, 'faces_url', '');
+        $faces_url = $_POST['dynamic_faces_url'] ?? get_setting($pdo, 'faces_url', '');
+        if (empty($faces_url)) {
+            $faces_url = get_setting($pdo, 'faces_url', '');
+        }
         echo json_encode(['success' => true, 'redirect' => $faces_url, 'is_faces' => true, 'message' => 'Redirecting to Faces Consent...']);
         exit;
     }
 
-    $payment_method = $_POST['payment_method'] ?? 'later';
+    if ($payment_method === 'bypass') {
+        $intake_url = "intake.php?booking_id=" . $booking_id;
+        echo json_encode(['success' => true, 'redirect' => $intake_url, 'message' => 'Payment Bypassed! Redirecting to Intake Form...']);
+        exit;
+    }
+
     if ($payment_method === 'paypal') {
         $deposit_price = 20.00; // Flat standard deposit
         $paypal_email = get_setting($pdo, 'paypal_email', 'vntauraskinandwellness@gmail.com');
         $item_name = "Deposit: " . substr($service, 0, 100); // Truncate if too long for paypal
-        $paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=" . urlencode($paypal_email) . "&amount=" . number_format($deposit_price, 2, '.', '') . "&currency_code=USD&item_name=" . urlencode($item_name);
+        
+        $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . dirname($_SERVER['REQUEST_URI']);
+        $return_url = $base_url . "/../intake.php?booking_id=" . $booking_id;
+        
+        $paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=" . urlencode($paypal_email) . "&amount=" . number_format($deposit_price, 2, '.', '') . "&currency_code=USD&item_name=" . urlencode($item_name) . "&return=" . urlencode($return_url);
         echo json_encode(['success' => true, 'redirect' => $paypal_url, 'message' => 'Redirecting to PayPal for £20 Deposit...']);
         exit;
     }
