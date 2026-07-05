@@ -79,7 +79,7 @@
                     <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Skin Concerns (Optional)</label>
                     <textarea name="notes" rows="2" class="w-full bg-white border border-gray-200 px-4 py-3 focus:outline-none focus:border-accent font-light" placeholder="E.g., breakouts, aging..."></textarea>
                 </div>
-                <div>
+                <div id="paymentMethodSection">
                     <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Payment Method</label>
                     <div class="flex gap-4">
                         <label class="flex items-center gap-2 cursor-pointer">
@@ -92,8 +92,19 @@
                         </label>
                     </div>
                 </div>
+                
+                <input type="hidden" name="is_faces_flow" id="isFacesFlow" value="0">
+                
                 <div id="bookingMsg" class="hidden p-3 rounded text-sm text-center"></div>
                 <button type="submit" id="bookingSubmit" class="w-full bg-secondary text-white uppercase tracking-widest text-sm py-4 rounded-full hover:bg-opacity-90 transition-colors mt-2">Submit Request</button>
+                
+                <script>
+                    if (globalBookingMode === 'faces') {
+                        document.getElementById('paymentMethodSection').style.display = 'none';
+                        document.getElementById('bookingSubmit').textContent = 'Proceed to Faces Consent';
+                        document.getElementById('isFacesFlow').value = '1';
+                    }
+                </script>
             </form>
         </div>
     </div>
@@ -105,10 +116,7 @@ let currentView = 'summary';
 
 const originalOpenModal = window.openBookingModal;
 window.openBookingModal = function(serviceName = null) {
-    if (globalBookingMode === 'faces' && globalFacesUrl) {
-        window.open(globalFacesUrl, '_blank');
-        return false;
-    }
+    // Hybrid Flow: We now always show the cart first to capture data.
     
     // Reset cart and add the clicked service
     shoppingCart = [];
@@ -317,7 +325,25 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
             if (data.redirect) {
                 msg.textContent = data.message;
                 msg.classList.add('bg-green-100', 'text-green-700');
-                window.location.href = data.redirect;
+                
+                if (data.is_faces) {
+                    closeBookingModal();
+                    const iframe = document.getElementById('facesIframe');
+                    if (iframe) {
+                        document.getElementById('facesLoader').style.display = 'flex';
+                        iframe.src = data.redirect;
+                    }
+                    const facesModal = document.getElementById('facesModal');
+                    if (facesModal) {
+                        facesModal.classList.remove('hidden');
+                        facesModal.classList.add('flex');
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        window.location.href = data.redirect;
+                    }
+                } else {
+                    window.location.href = data.redirect; // PayPal
+                }
             } else {
                 msg.textContent = data.message;
                 msg.classList.add('bg-green-100', 'text-green-700');

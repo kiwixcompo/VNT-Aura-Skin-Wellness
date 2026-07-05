@@ -53,6 +53,13 @@ try {
         $emailHelper->sendClientBookingConfirmation($email, $bookingData);
     }
     
+    $is_faces_flow = $_POST['is_faces_flow'] ?? '0';
+    if ($is_faces_flow === '1') {
+        $faces_url = get_setting($pdo, 'faces_url', '');
+        echo json_encode(['success' => true, 'redirect' => $faces_url, 'is_faces' => true, 'message' => 'Redirecting to Faces Consent...']);
+        exit;
+    }
+
     $payment_method = $_POST['payment_method'] ?? 'later';
     if ($payment_method === 'paypal') {
         $deposit_price = 20.00; // Flat standard deposit
