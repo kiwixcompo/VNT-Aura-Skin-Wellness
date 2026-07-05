@@ -55,30 +55,12 @@ try {
     
     $payment_method = $_POST['payment_method'] ?? 'later';
     if ($payment_method === 'paypal') {
-        $price = 0;
-        if ($service === 'Initial Consultation' || $service === 'Skin Consultation') {
-            $price_str = get_setting($pdo, 'consultation_price', '20');
-            $price = (float) preg_replace('/[^0-9.]/', '', $price_str);
-        } else {
-            $stmt2 = $pdo->prepare("SELECT price FROM treatments WHERE title = ?");
-            $stmt2->execute([$service]);
-            if ($t = $stmt2->fetch()) {
-                $price = (float) $t['price'];
-            } else {
-                $stmt3 = $pdo->prepare("SELECT price FROM programmes WHERE title = ?");
-                $stmt3->execute([$service]);
-                if ($p = $stmt3->fetch()) {
-                    $price = (float) $p['price'];
-                }
-            }
-        }
-        
-        if ($price > 0) {
-            $paypal_email = get_setting($pdo, 'paypal_email', 'vntauraskinandwellness@gmail.com');
-            $paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=" . urlencode($paypal_email) . "&amount=" . number_format($price, 2, '.', '') . "&currency_code=USD&item_name=" . urlencode($service);
-            echo json_encode(['success' => true, 'redirect' => $paypal_url, 'message' => 'Redirecting to PayPal...']);
-            exit;
-        }
+        $deposit_price = 20.00; // Flat standard deposit
+        $paypal_email = get_setting($pdo, 'paypal_email', 'vntauraskinandwellness@gmail.com');
+        $item_name = "Deposit: " . substr($service, 0, 100); // Truncate if too long for paypal
+        $paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=" . urlencode($paypal_email) . "&amount=" . number_format($deposit_price, 2, '.', '') . "&currency_code=USD&item_name=" . urlencode($item_name);
+        echo json_encode(['success' => true, 'redirect' => $paypal_url, 'message' => 'Redirecting to PayPal for £20 Deposit...']);
+        exit;
     }
 
     echo json_encode(['success' => true, 'message' => 'Your booking request has been received. We will contact you shortly to confirm.']);

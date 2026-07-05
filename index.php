@@ -174,7 +174,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                             echo nl2br($desc);
                             ?>
                         </div>
-                        <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($p['title'])) ?>', '<?= htmlspecialchars(addslashes($p['faces_link'] ?? '')) ?>'); return false;" class="block text-center text-xs uppercase tracking-widest text-bg bg-accent hover:bg-white transition-colors py-4 rounded font-medium">
+                        <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($p['title'])) ?>', '<?= htmlspecialchars(addslashes($p['faces_link'] ?? '')) ?>'); return false;" class="block text-center text-xs uppercase tracking-widest text-bg bg-accent hover:bg-white hover:text-accent transition-colors py-4 rounded font-medium">
                             Book This Journey 
                         </a>
                     </div>
