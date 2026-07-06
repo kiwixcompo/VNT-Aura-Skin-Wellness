@@ -28,5 +28,15 @@ if ($exit_code === 0) {
     echo "Deployment Failed!\n";
     echo implode("\n", $output);
 }
+
+// Automatically sync the database schema securely
+$schema_file = __DIR__ . '/update_schema.php';
+if (file_exists($schema_file)) {
+    echo "\nRunning Automatic Schema Sync...\n";
+    ob_start();
+    require_once $schema_file;
+    $schema_output = ob_get_clean();
+    echo strip_tags($schema_output); // Show text output
+}
 ?>
  
