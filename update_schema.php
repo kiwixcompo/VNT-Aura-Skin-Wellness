@@ -27,6 +27,20 @@ try {
         echo "Added 'aftercare_email_content' to programmes.<br>";
     }
 
+    // 3.1. Add price to programmes
+    $colCheck = $pdo->query("SHOW COLUMNS FROM programmes LIKE 'price'");
+    if ($colCheck->rowCount() == 0) {
+        $pdo->exec("ALTER TABLE programmes ADD COLUMN price DECIMAL(10,2) DEFAULT 0.00");
+        echo "Added 'price' to programmes.<br>";
+    }
+
+    // 3.2. Add duration to programmes
+    $colCheck = $pdo->query("SHOW COLUMNS FROM programmes LIKE 'duration'");
+    if ($colCheck->rowCount() == 0) {
+        $pdo->exec("ALTER TABLE programmes ADD COLUMN duration VARCHAR(50) DEFAULT '1 hr'");
+        echo "Added 'duration' to programmes.<br>";
+    }
+
     // 4. Update bookings table
     $colCheck = $pdo->query("SHOW COLUMNS FROM bookings LIKE 'duration'");
     if ($colCheck->rowCount() == 0) {
@@ -40,7 +54,7 @@ try {
         echo "Added 'aftercare_sent' to bookings.<br>";
     }
 
-    // 5. Create booking_intake_forms table if it doesn't exist
+    // 5. Create booking_intake_forms table without Foreign Key constraint
     $pdo->exec("CREATE TABLE IF NOT EXISTS booking_intake_forms (
         id INT AUTO_INCREMENT PRIMARY KEY,
         booking_id INT NOT NULL,
@@ -55,8 +69,7 @@ try {
         has_medical_conditions VARCHAR(10),
         medical_history TEXT,
         signature_name VARCHAR(255),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
     echo "Checked/Created booking_intake_forms table.<br>";
 
