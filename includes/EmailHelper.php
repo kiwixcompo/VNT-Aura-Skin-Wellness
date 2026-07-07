@@ -273,12 +273,10 @@ class EmailHelper
         $time = htmlspecialchars($data['time'] ?? $data['preferred_time'] ?? '');
 
         return "
-        <h2>Hello $name,</h2>
-        <p>Thank you for booking with VNT Aura Skin & Wellness.</p>
-        <p>We have received your request for <strong>$service</strong> on <strong>$date</strong> at <strong>$time</strong>.</p>
-        <p>Our team will contact you shortly to confirm your appointment.</p>
-        <br>
-        <p>Warm regards,<br>VNT Aura Team</p>
+        <p>Thank you for booking with VNT Aura Skin and Wellness.</p>
+        <p>Your appointment for the <strong>$service</strong> has been confirmed for <strong>$date</strong> at <strong>$time</strong>.</p>
+        <p>Please complete any required consultation and consent forms before your appointment.</p>
+        <p>We look forward to welcoming you and supporting you on your skin journey</p>
         ";
     }
 

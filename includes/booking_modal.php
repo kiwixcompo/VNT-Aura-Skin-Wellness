@@ -152,37 +152,11 @@ if (isset($pdo)) {
                     </div>
                 </div>
                 
-                <input type="hidden" name="is_faces_flow" id="isFacesFlow" value="0">
                 <input type="hidden" name="dynamic_faces_url" id="dynamicFacesUrl" value="">
-                
-                <script>
-                    // Execute after a tiny delay so globalBookingMode is available
-                    setTimeout(() => {
-                        if (globalBookingMode === 'faces') {
-                            const pSect = document.getElementById('paymentMethodSection');
-                            if(pSect) pSect.style.display = 'none';
-                            
-                            const btnSubmit = document.getElementById('bookingSubmit');
-                            if(btnSubmit) btnSubmit.textContent = 'Proceed to Faces Consent';
-                            
-                            const isFacesInput = document.getElementById('isFacesFlow');
-                            if(isFacesInput) isFacesInput.value = '1';
-                        }
-                    }, 100);
-                </script>
-                
                 <input type="hidden" name="is_faces_flow" id="isFacesFlow" value="0">
                 
                 <div id="bookingMsg" class="hidden p-3 rounded text-sm text-center"></div>
                 <button type="submit" id="bookingSubmit" class="w-full bg-secondary text-white uppercase tracking-widest text-sm py-4 rounded-full hover:bg-opacity-90 transition-colors mt-2">Submit Request</button>
-                
-                <script>
-                    if (globalBookingMode === 'faces') {
-                        document.getElementById('paymentMethodSection').style.display = 'none';
-                        document.getElementById('bookingSubmit').textContent = 'Proceed to Faces Consent';
-                        document.getElementById('isFacesFlow').value = '1';
-                    }
-                </script>
             </form>
         </div>
     </div>
@@ -196,9 +170,25 @@ const originalOpenModal = window.openBookingModal;
 window.openBookingModal = function(serviceName = null, serviceFacesUrl = null) {
     let targetUrl = serviceFacesUrl && serviceFacesUrl.trim() !== '' ? serviceFacesUrl : (typeof globalFacesUrl !== 'undefined' ? globalFacesUrl : '');
     
-    // Store the target URL for later use if we are in faces mode
-    if (globalBookingMode === 'faces' && targetUrl) {
+    // Dynamic Faces Mode Trigger: If a Faces URL exists for this service (or globally), force Faces mode for this booking
+    if (targetUrl) {
         window.currentFacesUrl = targetUrl;
+        document.getElementById('isFacesFlow').value = '1';
+        
+        const pSect = document.getElementById('paymentMethodSection');
+        if(pSect) pSect.style.display = 'none';
+        
+        const btnSubmit = document.getElementById('bookingSubmit');
+        if(btnSubmit) btnSubmit.textContent = 'Proceed to Faces Consent';
+    } else {
+        window.currentFacesUrl = '';
+        document.getElementById('isFacesFlow').value = '0';
+        
+        const pSect = document.getElementById('paymentMethodSection');
+        if(pSect) pSect.style.display = 'block';
+        
+        const btnSubmit = document.getElementById('bookingSubmit');
+        if(btnSubmit) btnSubmit.textContent = 'Submit Request';
     }
     
     // Hybrid Flow: We now always show the cart first to capture data.

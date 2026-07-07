@@ -306,7 +306,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                 <!-- Gallery Item 1 -->
                 <div class="reveal-up rounded-xl overflow-hidden shadow-lg border border-gray-100 group">
                     <div class="relative aspect-video">
-                        <img src="https://images.unsplash.com/photo-1596755389378-c11d04423447?auto=format&fit=crop&q=80&w=800" alt="Before and After" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <img src="assets/images/acne_before_after.png" alt="Before and After" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <span class="text-white uppercase tracking-widest text-sm border border-white px-6 py-2">Acne Clearance</span>
                         </div>
@@ -315,7 +315,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                 <!-- Gallery Item 2 -->
                 <div class="reveal-up rounded-xl overflow-hidden shadow-lg border border-gray-100 group delay-100">
                     <div class="relative aspect-video">
-                        <img src="https://images.unsplash.com/photo-1512496015851-a1dcbfd83049?auto=format&fit=crop&q=80&w=800" alt="Before and After" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <img src="assets/images/pigmentation_before_after.png" alt="Before and After" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <span class="text-white uppercase tracking-widest text-sm border border-white px-6 py-2">Pigmentation Lift</span>
                         </div>
@@ -324,7 +324,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                 <!-- Gallery Item 3 -->
                 <div class="reveal-up rounded-xl overflow-hidden shadow-lg border border-gray-100 group delay-200">
                     <div class="relative aspect-video">
-                        <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&q=80&w=800" alt="Before and After" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <img src="assets/images/rejuvenation_before_after.png" alt="Before and After" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <span class="text-white uppercase tracking-widest text-sm border border-white px-6 py-2">Skin Renewal</span>
                         </div>
