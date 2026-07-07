@@ -168,30 +168,28 @@ let currentView = 'summary';
 
 const originalOpenModal = window.openBookingModal;
 window.openBookingModal = function(serviceName = null, serviceFacesUrl = null) {
-    let targetUrl = serviceFacesUrl && serviceFacesUrl.trim() !== '' ? serviceFacesUrl : (typeof globalFacesUrl !== 'undefined' ? globalFacesUrl : '');
+    // If a service-specific link is provided, use it. Otherwise, if global mode is 'faces', use the global link.
+    let targetUrl = serviceFacesUrl && serviceFacesUrl.trim() !== '' 
+        ? serviceFacesUrl 
+        : (typeof globalBookingMode !== 'undefined' && globalBookingMode === 'faces' && typeof globalFacesUrl !== 'undefined' ? globalFacesUrl : '');
     
-    // Dynamic Faces Mode Trigger: If a Faces URL exists for this service (or globally), force Faces mode for this booking
+    // If a Faces URL exists for this booking, immediately open the Faces Modal
     if (targetUrl) {
-        window.currentFacesUrl = targetUrl;
-        document.getElementById('isFacesFlow').value = '1';
-        
-        const pSect = document.getElementById('paymentMethodSection');
-        if(pSect) pSect.style.display = 'none';
-        
-        const btnSubmit = document.getElementById('bookingSubmit');
-        if(btnSubmit) btnSubmit.textContent = 'Proceed to Faces Consent';
-    } else {
-        window.currentFacesUrl = '';
-        document.getElementById('isFacesFlow').value = '0';
-        
-        const pSect = document.getElementById('paymentMethodSection');
-        if(pSect) pSect.style.display = 'block';
-        
-        const btnSubmit = document.getElementById('bookingSubmit');
-        if(btnSubmit) btnSubmit.textContent = 'Submit Request';
+        const iframe = document.getElementById('facesIframe');
+        if (iframe) {
+            document.getElementById('facesLoader').style.display = 'flex';
+            iframe.src = targetUrl;
+        }
+        const facesModal = document.getElementById('facesModal');
+        if (facesModal) {
+            facesModal.classList.remove('hidden');
+            facesModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+        return; // Bypass the Cart modal entirely
     }
     
-    // Hybrid Flow: We now always show the cart first to capture data.
+    // Otherwise, use the Custom Cart Flow (Basic Email Booking)
     
     // Custom Cart Flow
 
