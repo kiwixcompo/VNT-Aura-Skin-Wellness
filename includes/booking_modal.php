@@ -173,19 +173,9 @@ window.openBookingModal = function(serviceName = null, serviceFacesUrl = null) {
         ? serviceFacesUrl 
         : (typeof globalBookingMode !== 'undefined' && globalBookingMode === 'faces' && typeof globalFacesUrl !== 'undefined' ? globalFacesUrl : '');
     
-    // If a Faces URL exists for this booking, immediately open the Faces Modal
+    // If a Faces URL exists for this booking, immediately open it in a new tab
     if (targetUrl) {
-        const iframe = document.getElementById('facesIframe');
-        if (iframe) {
-            document.getElementById('facesLoader').style.display = 'flex';
-            iframe.src = targetUrl;
-        }
-        const facesModal = document.getElementById('facesModal');
-        if (facesModal) {
-            facesModal.classList.remove('hidden');
-            facesModal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
+        window.open(targetUrl, '_blank');
         return; // Bypass the Cart modal entirely
     }
     
