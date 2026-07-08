@@ -157,8 +157,8 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
         <!-- Desktop Menu -->
         <nav class="hidden md:flex space-x-10 items-center">
             <a href="#home" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Home</a>
-            <a href="#treatments" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Treatments</a>
-            <a href="#programmes" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Programmes</a>
+            <a href="#treatments" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Advanced Skin Therapies</a>
+            <a href="#programmes" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Packages</a>
             <a href="#founder" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Meet Valerie</a>
             <a href="#contact" class="text-text hover:opacity-70 transition-colors font-light text-[15px]">Contact</a>
         </nav>
@@ -178,8 +178,8 @@ $calendlyUrl = get_setting($pdo, 'calendly_url', 'https://calendly.com/vnt-aura-
     <!-- Mobile Menu Overlay -->
     <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-bg/95 backdrop-blur-md shadow-xl flex-col items-center py-8 space-y-6">
         <a href="#home" class="text-lg text-text font-light">Home</a>
-        <a href="#treatments" class="text-lg text-text font-light">Treatments</a>
-        <a href="#programmes" class="text-lg text-text font-light">Programmes</a>
+        <a href="#treatments" class="text-lg text-text font-light">Advanced Skin Therapies</a>
+        <a href="#programmes" class="text-lg text-text font-light">Packages</a>
         <a href="#founder" class="text-lg text-text font-light">Meet Valerie</a>
         <a href="#contact" class="text-lg text-text font-light">Contact</a>
     </div>

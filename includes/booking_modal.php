@@ -457,7 +457,7 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
             <div id="facesLoader" class="absolute inset-0 flex items-center justify-center bg-white">
                 <i class="fas fa-spinner fa-spin text-3xl text-accent"></i>
             </div>
-            <iframe id="facesIframe" src="" class="w-full h-full border-0 relative z-10" style="pointer-events: auto !important;" onload="document.getElementById('facesLoader').style.display='none'"></iframe>
+            <iframe id="facesIframe" src="" class="w-full h-full border-0 relative z-10" style="pointer-events: auto !important;" allow="payment" onload="document.getElementById('facesLoader').style.display='none'"></iframe>
         </div>
     </div>
 </div>

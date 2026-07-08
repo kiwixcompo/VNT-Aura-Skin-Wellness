@@ -66,6 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contact_phone' => $_POST['contact_phone'] ?? '',
         'contact_email_display' => $_POST['contact_email_display'] ?? '',
         'contact_hours' => $_POST['contact_hours'] ?? '',
+        'social_instagram' => $_POST['social_instagram'] ?? '',
+        'social_facebook' => $_POST['social_facebook'] ?? '',
+        'social_tiktok' => $_POST['social_tiktok'] ?? '',
+        'social_twitter' => $_POST['social_twitter'] ?? '',
         'admin_email' => $_POST['admin_email'] ?? '',
         'notify_admin' => isset($_POST['notify_admin']) ? '1' : '0',
         'notify_client' => isset($_POST['notify_client']) ? '1' : '0',
@@ -596,6 +600,29 @@ $settings = array_merge($defaultSettings, $dbSettings);
                     <div><label class="block text-gray-700 font-medium mb-1">Address</label><input type="text" name="contact_address" value="<?= htmlspecialchars($settings['contact_address'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
                     <div><label class="block text-gray-700 font-medium mb-1">Phone</label><input type="text" name="contact_phone" value="<?= htmlspecialchars($settings['contact_phone'] ?? '') ?>" class="w-full px-4 py-2 border rounded"></div>
                     <div class="md:col-span-2"><label class="block text-gray-700 font-medium mb-1">Opening Hours (one per line)</label><textarea name="contact_hours" rows="4" class="w-full px-4 py-2 border rounded"><?= htmlspecialchars($settings['contact_hours'] ?? '') ?></textarea></div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-8 border-l-4 border-pink-500">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Social Media Links</h3>
+                <p class="text-xs text-gray-500 mb-4">Leave a field blank to hide the icon from the footer.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fab fa-instagram mr-1 text-pink-600"></i> Instagram URL</label>
+                        <input type="url" name="social_instagram" value="<?= htmlspecialchars($settings['social_instagram'] ?? '') ?>" class="w-full px-4 py-2 border rounded" placeholder="https://instagram.com/...">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fab fa-facebook-f mr-1 text-blue-600"></i> Facebook URL</label>
+                        <input type="url" name="social_facebook" value="<?= htmlspecialchars($settings['social_facebook'] ?? '') ?>" class="w-full px-4 py-2 border rounded" placeholder="https://facebook.com/...">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fab fa-tiktok mr-1 text-black"></i> TikTok URL</label>
+                        <input type="url" name="social_tiktok" value="<?= htmlspecialchars($settings['social_tiktok'] ?? '') ?>" class="w-full px-4 py-2 border rounded" placeholder="https://tiktok.com/...">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fab fa-twitter mr-1 text-blue-400"></i> Twitter URL</label>
+                        <input type="url" name="social_twitter" value="<?= htmlspecialchars($settings['social_twitter'] ?? '') ?>" class="w-full px-4 py-2 border rounded" placeholder="https://twitter.com/...">
+                    </div>
                 </div>
             </div>
 

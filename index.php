@@ -189,8 +189,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
     <!-- ADVANCED SKIN THERAPIES -->
     <section id="treatments" class="py-32 px-6 bg-bg">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-20 reveal-up">
-                <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Clinical Excellence</span>
+            <div class="text-center mb-16 reveal-up max-w-3xl mx-auto">
                 <h2 class="text-4xl md:text-5xl font-heading text-secondary">Advanced Skin Therapies</h2>
                 <p class="mt-6 text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">We focus on long-term cellular health rather than quick fixes. Explore our curated, evidence-based therapies designed to restore, rebuild, and protect your skin.</p>
             </div>

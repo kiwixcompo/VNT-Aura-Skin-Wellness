@@ -11,9 +11,25 @@
             <h4 class="text-xl font-heading tracking-widest uppercase text-secondary">Contact</h4>
             <p class="font-light">Leeds, United Kingdom</p>
             <p class="font-light"><a href="mailto:vntauraskinandwellness@gmail.com" class="hover:text-white transition-colors">vntauraskinandwellness@gmail.com</a></p>
+            <?php
+                $social_instagram = get_setting($pdo, 'social_instagram', '#');
+                $social_facebook = get_setting($pdo, 'social_facebook', '#');
+                $social_tiktok = get_setting($pdo, 'social_tiktok', '');
+                $social_twitter = get_setting($pdo, 'social_twitter', '');
+            ?>
             <div class="flex justify-center md:justify-start space-x-4 pt-2">
-                <a href="#" class="text-secondary hover:text-white transition-colors text-xl"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="text-secondary hover:text-white transition-colors text-xl"><i class="fab fa-facebook-f"></i></a>
+                <?php if($social_instagram): ?>
+                    <a href="<?= htmlspecialchars($social_instagram) ?>" class="text-secondary hover:text-white transition-colors text-xl" target="_blank"><i class="fab fa-instagram"></i></a>
+                <?php endif; ?>
+                <?php if($social_facebook): ?>
+                    <a href="<?= htmlspecialchars($social_facebook) ?>" class="text-secondary hover:text-white transition-colors text-xl" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <?php endif; ?>
+                <?php if($social_tiktok): ?>
+                    <a href="<?= htmlspecialchars($social_tiktok) ?>" class="text-secondary hover:text-white transition-colors text-xl" target="_blank"><i class="fab fa-tiktok"></i></a>
+                <?php endif; ?>
+                <?php if($social_twitter): ?>
+                    <a href="<?= htmlspecialchars($social_twitter) ?>" class="text-secondary hover:text-white transition-colors text-xl" target="_blank"><i class="fab fa-twitter"></i></a>
+                <?php endif; ?>
             </div>
         </div>
         
