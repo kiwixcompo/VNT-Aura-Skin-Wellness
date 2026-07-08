@@ -12,10 +12,10 @@
             <p class="font-light">Leeds, United Kingdom</p>
             <p class="font-light"><a href="mailto:vntauraskinandwellness@gmail.com" class="hover:text-white transition-colors">vntauraskinandwellness@gmail.com</a></p>
             <?php
-                $social_instagram = get_setting($pdo, 'social_instagram', '#');
-                $social_facebook = get_setting($pdo, 'social_facebook', '#');
-                $social_tiktok = get_setting($pdo, 'social_tiktok', '');
-                $social_twitter = get_setting($pdo, 'social_twitter', '');
+                $social_instagram = get_setting($pdo, 'social_instagram', 'https://instagram.com/vntaura');
+                $social_facebook = get_setting($pdo, 'social_facebook', 'https://facebook.com/vntaura');
+                $social_tiktok = get_setting($pdo, 'social_tiktok', 'https://tiktok.com/@vntaura');
+                $social_twitter = get_setting($pdo, 'social_twitter', 'https://twitter.com/vntaura');
             ?>
             <div class="flex justify-center md:justify-start space-x-4 pt-2">
                 <?php if($social_instagram): ?>

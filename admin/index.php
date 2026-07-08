@@ -233,6 +233,11 @@ $defaultSettings = [
     'contact_email_display' => 'hello@vntaura.com',
     'contact_hours' => "Monday: Closed\nTuesday - Friday: 10am - 7pm\nSaturday: 9am - 5pm\nSunday: Closed",
     
+    'social_instagram' => 'https://instagram.com/vntaura',
+    'social_facebook' => 'https://facebook.com/vntaura',
+    'social_tiktok' => 'https://tiktok.com/@vntaura',
+    'social_twitter' => 'https://twitter.com/vntaura',
+    
     'admin_email' => 'admin@vntaura.com',
     'notify_admin' => '1',
     'notify_client' => '1',
