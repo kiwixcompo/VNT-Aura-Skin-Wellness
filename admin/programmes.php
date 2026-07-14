@@ -140,6 +140,10 @@ $programmes = $stmt->fetchAll();
                         <label class="block text-gray-700 font-medium mb-1">Description</label>
                         <textarea name="description" id="form_description" rows="4" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required></textarea>
                     </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Price (£)</label>
+                        <input type="number" step="0.01" name="price" id="form_price" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                    </div>
                     
                     <div class="border p-4 rounded-lg bg-gray-50">
                         <label class="block text-gray-700 font-medium mb-2">Image Source</label>
@@ -180,6 +184,7 @@ $programmes = $stmt->fetchAll();
         const formId = document.getElementById('form_id');
         const formTitle = document.getElementById('form_title');
         const formDesc = document.getElementById('form_description');
+        const formPrice = document.getElementById('form_price');
         const formImage = document.getElementById('form_image_url');
         const formOrder = document.getElementById('form_display_order');
 
@@ -188,6 +193,7 @@ $programmes = $stmt->fetchAll();
             formId.value = '';
             formTitle.value = '';
             formDesc.value = '';
+            formPrice.value = '';
             formImage.value = '';
             formOrder.value = '0';
             modal.style.display = 'flex';
@@ -198,6 +204,7 @@ $programmes = $stmt->fetchAll();
             formId.value = data.id;
             formTitle.value = data.title;
             formDesc.value = data.description;
+            formPrice.value = data.price || '0.00';
             formImage.value = data.image_url;
             formOrder.value = data.display_order;
             modal.style.display = 'flex';

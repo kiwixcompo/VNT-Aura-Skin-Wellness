@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $key_benefits = $_POST['key_benefits'] ?? '';
     $duration = $_POST['duration'] ?? '';
     $course_recommendation = $_POST['course_recommendation'] ?? '';
+    $price = $_POST['price'] ?? 0.00;
     $image_url = $_POST['image_url'] ?? '';
     $display_order = $_POST['display_order'] ?? 0;
     
@@ -42,11 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     
     if ($id) {
-        $stmt = $pdo->prepare('UPDATE treatments SET title=?, short_desc=?, what_it_is=?, suitable_for=?, key_benefits=?, duration=?, course_recommendation=?, image_url=?, display_order=? WHERE id=?');
-        $stmt->execute([$title, $short_desc, $what_it_is, $suitable_for, $key_benefits, $duration, $course_recommendation, $image_url, $display_order, $id]);
+        $stmt = $pdo->prepare('UPDATE treatments SET title=?, short_desc=?, what_it_is=?, suitable_for=?, key_benefits=?, duration=?, course_recommendation=?, price=?, image_url=?, display_order=? WHERE id=?');
+        $stmt->execute([$title, $short_desc, $what_it_is, $suitable_for, $key_benefits, $duration, $course_recommendation, $price, $image_url, $display_order, $id]);
     } else {
-        $stmt = $pdo->prepare('INSERT INTO treatments (title, short_desc, what_it_is, suitable_for, key_benefits, duration, course_recommendation, image_url, display_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$title, $short_desc, $what_it_is, $suitable_for, $key_benefits, $duration, $course_recommendation, $image_url, $display_order]);
+        $stmt = $pdo->prepare('INSERT INTO treatments (title, short_desc, what_it_is, suitable_for, key_benefits, duration, course_recommendation, price, image_url, display_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt->execute([$title, $short_desc, $what_it_is, $suitable_for, $key_benefits, $duration, $course_recommendation, $price, $image_url, $display_order]);
     }
     header('Location: treatments.php?msg=saved');
     exit;
@@ -150,10 +151,14 @@ $treatments = $stmt->fetchAll();
                     <label class="block text-gray-700 font-medium mb-1">Key Benefits</label>
                     <textarea name="key_benefits" id="form_key_benefits" rows="2" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required></textarea>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-3 gap-4">
                     <div>
                         <label class="block text-gray-700 font-medium mb-1">Duration</label>
                         <input type="text" name="duration" id="form_duration" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Price (£)</label>
+                        <input type="number" step="0.01" name="price" id="form_price" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium mb-1">Course Recommendation</label>
@@ -198,6 +203,7 @@ $treatments = $stmt->fetchAll();
         const formSuitable = document.getElementById('form_suitable_for');
         const formBenefits = document.getElementById('form_key_benefits');
         const formDuration = document.getElementById('form_duration');
+        const formPrice = document.getElementById('form_price');
         const formCourse = document.getElementById('form_course_recommendation');
         const formImage = document.getElementById('form_image_url');
         const formOrder = document.getElementById('form_display_order');
@@ -211,6 +217,7 @@ $treatments = $stmt->fetchAll();
             formSuitable.value = '';
             formBenefits.value = '';
             formDuration.value = '';
+            formPrice.value = '';
             formCourse.value = '';
             formImage.value = '';
             formOrder.value = '0';
@@ -226,6 +233,7 @@ $treatments = $stmt->fetchAll();
             formSuitable.value = data.suitable_for;
             formBenefits.value = data.key_benefits;
             formDuration.value = data.duration;
+            formPrice.value = data.price || '0.00';
             formCourse.value = data.course_recommendation;
             formImage.value = data.image_url;
             formOrder.value = data.display_order;

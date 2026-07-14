@@ -21,8 +21,8 @@ function safe_fetch_all($pdo, $query) {
     }
 }
 
-$treatments = safe_fetch_all($pdo, 'SELECT * FROM treatments ORDER BY display_order ASC, id ASC');
-$programmes = safe_fetch_all($pdo, 'SELECT * FROM programmes ORDER BY display_order ASC, id ASC');
+$treatments = safe_fetch_all($pdo, 'SELECT * FROM treatments ORDER BY price ASC, display_order ASC, id ASC');
+$programmes = safe_fetch_all($pdo, 'SELECT * FROM programmes ORDER BY price ASC, display_order ASC, id ASC');
 $faqs = safe_fetch_all($pdo, 'SELECT * FROM faqs ORDER BY display_order ASC, id ASC');
 $testimonials = safe_fetch_all($pdo, 'SELECT * FROM testimonials ORDER BY display_order ASC, id ASC');
 $gallery_items = safe_fetch_all($pdo, 'SELECT * FROM gallery ORDER BY display_order ASC, id ASC');
@@ -144,59 +144,30 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
     </section>
 
 
-    <!-- OUR SKIN JOURNEYS -->
-    <section id="programmes" class="py-32 px-6 bg-bg text-text">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
-                <div class="max-w-2xl">
-                    <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Curated Experiences</span>
-                    <h2 class="text-4xl md:text-5xl font-heading mb-6">Our Packages</h2>
-                    <p class="text-gray-400 font-light text-lg">We don't just perform treatments; we deliver results. Our skin journeys combine multiple modalities over a set period to fundamentally transform your skin.</p>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
-                <?php foreach ($programmes as $p): ?>
-                <div class="group reveal-up bg-black/5 rounded-2xl overflow-hidden border border-black/5 hover:border-white/30 transition-colors">
-                    <div class="overflow-hidden relative h-64">
-                        <img src="<?= htmlspecialchars($p['image_url']) ?>" alt="<?= htmlspecialchars($p['title']) ?>" class="w-full h-full object-cover grayscale opacity-80 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#1a1c1a] to-transparent opacity-80"></div>
-                        <h3 class="absolute bottom-6 left-8 text-3xl font-heading text-white"><?= htmlspecialchars($p['title']) ?></h3>
-                    </div>
-                    <div class="p-8">
-                        <div class="text-gray-700 font-light leading-relaxed mb-8 space-y-4 text-sm prose prose-p:text-gray-700 prose-ul:text-gray-700">
-                            <?php
-                            $desc = htmlspecialchars($p['description']);
-                            // Simple parser to make bullet points actual UL/LI so it looks clean
-                            $desc = preg_replace('/\n\* (.*)/', '<li class="flex items-start"><i class="fas fa-caret-right text-accent mt-1 mr-2 text-[10px]"></i>$1</li>', $desc);
-                            // Wrap consecutive li in ul
-                            $desc = preg_replace('/(<li.*?>.*?<\/li>(\s*<li.*?>.*?<\/li>)*)/s', '<ul class="space-y-1 mb-4 mt-2">$1</ul>', $desc);
-                            echo nl2br($desc);
-                            ?>
-                        </div>
-                        <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($p['title'])) ?>', '<?= htmlspecialchars(addslashes($p['faces_link'] ?? '')) ?>'); return false;" class="block text-center text-xs uppercase tracking-widest text-bg bg-accent hover:bg-white hover:text-accent transition-colors py-4 rounded font-medium">
-                            Book This Journey 
-                        </a>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-
-
-    
     <!-- ADVANCED SKIN THERAPIES -->
     <section id="treatments" class="py-32 px-6 bg-bg">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16 reveal-up max-w-3xl mx-auto">
+            <div class="text-center mb-10 reveal-up max-w-3xl mx-auto">
                 <h2 class="text-4xl md:text-5xl font-heading text-secondary">Advanced Skin Therapies</h2>
                 <p class="mt-6 text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">We focus on long-term cellular health rather than quick fixes. Explore our curated, evidence-based therapies designed to restore, rebuild, and protect your skin.</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-10">
+            <div class="flex justify-end mb-8 reveal-up">
+                <div class="relative">
+                    <select id="treatmentSort" onchange="sortTreatments()" class="appearance-none bg-white border border-gray-200 text-gray-700 py-2 pl-4 pr-10 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent text-sm">
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                        <option value="newest">Recently Updated</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div id="treatmentsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-10">
                 <?php foreach ($treatments as $t): ?>
-                <div class="group reveal-up flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-500">
+                <div class="treatment-card group reveal-up flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-500" data-price="<?= htmlspecialchars($t['price'] ?? 0) ?>" data-updated="<?= strtotime($t['updated_at'] ?? 'now') ?>">
                     <div class="p-8 flex flex-col flex-grow">
                         <div class="mb-4 border-b border-gray-100 pb-4 flex flex-col items-start gap-1">
                             <div class="flex justify-between items-start w-full">
@@ -206,6 +177,7 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                             <?php if (!empty($t['course_recommendation'])): ?>
                             <span class="block text-accent font-medium text-sm mt-1 leading-tight"><?= htmlspecialchars($t['course_recommendation']) ?></span>
                             <?php endif; ?>
+                            <span class="block text-secondary font-semibold text-lg mt-2">£<?= htmlspecialchars($t['price'] ?? 0) ?></span>
                         </div>
                         <p class="text-gray-500 font-light text-[15px] leading-relaxed mb-6 flex-grow"><?= htmlspecialchars($t['short_desc']) ?></p>
                         
@@ -232,6 +204,49 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
         </div>
     </section>
 
+    <!-- OUR SKIN JOURNEYS -->
+    <section id="programmes" class="py-32 px-6 bg-white text-text">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
+                <div class="max-w-2xl">
+                    <span class="text-accent uppercase tracking-widest text-sm font-semibold mb-2 block">Curated Experiences</span>
+                    <h2 class="text-4xl md:text-5xl font-heading mb-6">Our Packages</h2>
+                    <p class="text-gray-400 font-light text-lg">We don't just perform treatments; we deliver results. Our skin journeys combine multiple modalities over a set period to fundamentally transform your skin.</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
+                <?php foreach ($programmes as $p): ?>
+                <div class="group reveal-up bg-black/5 rounded-2xl overflow-hidden border border-black/5 hover:border-white/30 transition-colors">
+                    <div class="overflow-hidden relative h-64">
+                        <img src="<?= htmlspecialchars($p['image_url']) ?>" alt="<?= htmlspecialchars($p['title']) ?>" class="w-full h-full object-cover grayscale opacity-80 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#1a1c1a] to-transparent opacity-80"></div>
+                        <h3 class="absolute bottom-6 left-8 text-3xl font-heading text-white"><?= htmlspecialchars($p['title']) ?></h3>
+                        <?php if(!empty($p['price']) && $p['price'] > 0): ?>
+                        <span class="absolute bottom-6 right-8 text-xl font-heading text-white bg-black/30 px-3 py-1 rounded backdrop-blur-sm">£<?= htmlspecialchars($p['price']) ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="p-8">
+                        <div class="text-gray-700 font-light leading-relaxed mb-8 space-y-4 text-sm prose prose-p:text-gray-700 prose-ul:text-gray-700">
+                            <?php
+                            $desc = htmlspecialchars($p['description']);
+                            // Simple parser to make bullet points actual UL/LI so it looks clean
+                            $desc = preg_replace('/\n\* (.*)/', '<li class="flex items-start"><i class="fas fa-caret-right text-accent mt-1 mr-2 text-[10px]"></i>$1</li>', $desc);
+                            // Wrap consecutive li in ul
+                            $desc = preg_replace('/(<li.*?>.*?<\/li>(\s*<li.*?>.*?<\/li>)*)/s', '<ul class="space-y-1 mb-4 mt-2">$1</ul>', $desc);
+                            echo nl2br($desc);
+                            ?>
+                        </div>
+                        <a href="#" onclick="openBookingModal('<?= htmlspecialchars(addslashes($p['title'])) ?>', '<?= htmlspecialchars(addslashes($p['faces_link'] ?? '')) ?>'); return false;" class="block text-center text-xs uppercase tracking-widest text-bg bg-accent hover:bg-white hover:text-accent transition-colors py-4 rounded font-medium">
+                            Book This Journey 
+                        </a>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
 
     <script>
         function toggleTreatmentDetails(id) {
@@ -244,6 +259,35 @@ $founderStyle = "object-fit: cover; object-position: {$founderX}% {$founderY}%;"
                 details.classList.add('hidden');
                 icon.classList.remove('rotate-45');
             }
+        }
+
+        function sortTreatments() {
+            const sortVal = document.getElementById('treatmentSort').value;
+            const grid = document.getElementById('treatmentsGrid');
+            const cards = Array.from(grid.getElementsByClassName('treatment-card'));
+
+            cards.sort((a, b) => {
+                const priceA = parseFloat(a.getAttribute('data-price')) || 0;
+                const priceB = parseFloat(b.getAttribute('data-price')) || 0;
+                const dateA = parseInt(a.getAttribute('data-updated')) || 0;
+                const dateB = parseInt(b.getAttribute('data-updated')) || 0;
+
+                if (sortVal === 'price_asc') {
+                    return priceA - priceB;
+                } else if (sortVal === 'price_desc') {
+                    return priceB - priceA;
+                } else if (sortVal === 'newest') {
+                    return dateB - dateA;
+                }
+                return 0;
+            });
+
+            // Clear and re-append
+            grid.innerHTML = '';
+            cards.forEach(card => grid.appendChild(card));
+            
+            // Re-initialize any scroll animations if needed
+            ScrollReveal().sync();
         }
     </script>
 
